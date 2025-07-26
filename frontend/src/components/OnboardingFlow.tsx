@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, ChevronLeft, Upload, Building, Target, User, Briefcase, Instagram, Youtube, BookText as TikTok, CheckCircle, Zap, Users, DollarSign } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Upload, Building, Target, User, Briefcase, Instagram, Youtube, Video, CheckCircle, Zap, Users, DollarSign } from 'lucide-react';
 
 interface OnboardingFlowProps {
   onComplete: () => void;
@@ -100,7 +100,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   const platforms = [
     { name: 'Instagram', icon: Instagram },
     { name: 'YouTube', icon: Youtube },
-    { name: 'TikTok', icon: TikTok }
+    { name: 'TikTok', icon: Video }  // Changed from BookText to Video
   ];
 
   return (
@@ -113,7 +113,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
             <span className="text-sm font-medium text-[#f5f5f5]">{Math.round((currentStep / totalSteps) * 100)}% complete</span>
           </div>
           <div className="w-full bg-[#1c1c1c] rounded-full h-2">
-            <div 
+            <div
               className="bg-[#f5f5f5] h-2 rounded-full transition-all duration-300"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
             ></div>
@@ -129,7 +129,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </div>
               <h2 className="text-2xl font-bold text-center mb-2 text-[#f5f5f5]">Choose your account type</h2>
               <p className="text-[#f5f5f5]/70 text-center mb-8">Are you a business or an influencer?</p>
-              
+
               <div className="space-y-4">
                 <button
                   onClick={() => setUserType('business')}
@@ -147,7 +147,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     </div>
                   </div>
                 </button>
-                
+
                 <button
                   onClick={() => setUserType('influencer')}
                   className={`w-full p-4 rounded-xl border-2 transition-all ${
@@ -175,7 +175,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </div>
               <h2 className="text-2xl font-bold text-center mb-2 text-[#f5f5f5]">Tell us about your business</h2>
               <p className="text-[#f5f5f5]/70 text-center mb-8">Let's get your company set up</p>
-              
+
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Business Type</label>
@@ -187,7 +187,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     className="w-full px-4 py-3 border border-[#f5f5f5]/20 bg-[#1c1c1c] text-[#f5f5f5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f5f5f5]/50 focus:border-transparent placeholder-[#f5f5f5]/50"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Industry</label>
                   <select
@@ -201,7 +201,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Target Audience</label>
                   <input
@@ -212,7 +212,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     className="w-full px-4 py-3 border border-[#f5f5f5]/20 bg-[#1c1c1c] text-[#f5f5f5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f5f5f5]/50 focus:border-transparent placeholder-[#f5f5f5]/50"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Ad Budget</label>
                   <input
@@ -223,7 +223,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     className="w-full px-4 py-3 border border-[#f5f5f5]/20 bg-[#1c1c1c] text-[#f5f5f5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f5f5f5]/50 focus:border-transparent placeholder-[#f5f5f5]/50"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Previous Influencer Marketing Experience</label>
                   <input
@@ -245,7 +245,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </div>
               <h2 className="text-2xl font-bold text-center mb-2 text-[#f5f5f5]">Connect your social media</h2>
               <p className="text-[#f5f5f5]/70 text-center mb-8">You must connect at least one platform to continue</p>
-              
+
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Username</label>
@@ -257,7 +257,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     className="w-full px-4 py-3 border border-[#f5f5f5]/20 bg-[#1c1c1c] text-[#f5f5f5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f5f5f5]/50 focus:border-transparent placeholder-[#f5f5f5]/50"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Platforms (Select at least one)</label>
                   <div className="grid grid-cols-3 gap-3">
@@ -285,7 +285,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     <p className="text-sm text-red-400 mt-2">Please select at least one platform</p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Email</label>
                   <input
@@ -296,7 +296,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     className="w-full px-4 py-3 border border-[#f5f5f5]/20 bg-[#1c1c1c] text-[#f5f5f5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f5f5f5]/50 focus:border-transparent placeholder-[#f5f5f5]/50"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Password</label>
                   <input
@@ -318,7 +318,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </div>
               <h2 className="text-2xl font-bold text-center mb-2 text-[#f5f5f5]">Tell us about your content</h2>
               <p className="text-[#f5f5f5]/70 text-center mb-8">Help brands discover you</p>
-              
+
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Niche</label>
@@ -333,7 +333,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Follower Count</label>
                   <select
@@ -358,7 +358,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </div>
               <h2 className="text-2xl font-bold text-center mb-2 text-[#f5f5f5]">Add your best work</h2>
               <p className="text-[#f5f5f5]/70 text-center mb-8">Share links to your best content (optional)</p>
-              
+
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-[#f5f5f5]/70 mb-2">Media Links</label>
@@ -382,7 +382,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </div>
               <h2 className="text-2xl font-bold text-center mb-2 text-[#f5f5f5]">Welcome to InfluenceConnect!</h2>
               <p className="text-[#f5f5f5]/70 text-center mb-8">Here's how our platform works</p>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 bg-[#f5f5f5]/10 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -393,7 +393,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     <p className="text-sm text-[#f5f5f5]/70">Brands will send you personalized campaign invitations based on your profile and content style.</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 bg-[#f5f5f5]/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-[#f5f5f5]" />
@@ -403,7 +403,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     <p className="text-sm text-[#f5f5f5]/70">Review campaign details, accept the ones you love, and create authentic content that resonates with your audience.</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 bg-[#f5f5f5]/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <DollarSign className="w-5 h-5 text-[#f5f5f5]" />
@@ -424,15 +424,15 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
             onClick={handlePrevious}
             disabled={currentStep === 1}
             className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-colors ${
-              currentStep === 1 
-                ? 'text-[#f5f5f5]/30 cursor-not-allowed' 
+              currentStep === 1
+                ? 'text-[#f5f5f5]/30 cursor-not-allowed'
                 : 'text-[#f5f5f5]/70 hover:text-[#f5f5f5] hover:bg-[#f5f5f5]/5'
             }`}
           >
             <ChevronLeft className="w-5 h-5" />
             <span>Previous</span>
           </button>
-          
+
           <button
             onClick={handleNext}
             disabled={userType === 'influencer' && currentStep === 2 && formData.platforms.length === 0}
@@ -450,5 +450,3 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     </div>
   );
 };
-
-export default OnboardingFlow;
