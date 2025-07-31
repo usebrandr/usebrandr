@@ -1,15 +1,13 @@
 import React from 'react';
 import logoIcon from '../assets/logo-icon.png';
-import logoBrandr from '../assets/logo-brandr.png';
 
 interface BrandrLogoProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'color' | 'white'; // color for light bg, white for dark bg
-  iconOnly?: boolean; // just the icon, no text
 }
 
-const BrandrLogo: React.FC<BrandrLogoProps> = ({ className = '', size = 'md', variant = 'color', iconOnly = false }) => {
+const BrandrLogo: React.FC<BrandrLogoProps> = ({ className = '', size = 'md', variant = 'color' }) => {
   const sizeClasses = {
     sm: 'h-8',
     md: 'h-12',
@@ -22,8 +20,8 @@ const BrandrLogo: React.FC<BrandrLogoProps> = ({ className = '', size = 'md', va
 
   return (
     <img
-      src={iconOnly ? logoIcon : logoBrandr}
-      alt={iconOnly ? 'Brandr Logo Icon' : 'Brandr Logo'}
+      src={logoIcon}
+      alt="Brandr Logo"
       className={`${sizeClasses[size]} ${className}`}
       style={{ objectFit: 'contain', width: 'auto', ...filterStyle }}
     />
