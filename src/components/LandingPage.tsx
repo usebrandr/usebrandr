@@ -4,7 +4,7 @@ import WaitlistModal from './WaitlistModal';
 import BrandrLogo from './BrandrLogo';
 
 interface LandingPageProps {
-  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'contact' | 'privacy' | 'terms' | 'cookies') => void;
+  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'contact' | 'admin' | 'privacy' | 'terms' | 'cookies') => void;
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
@@ -395,6 +395,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <li><button onClick={() => onNavigate('about')} className="hover:text-[#f5f5f5] transition-colors">About</button></li>
                 <li><button onClick={() => onNavigate('faqs')} className="hover:text-[#f5f5f5] transition-colors">FAQs</button></li>
                 <li><button onClick={() => onNavigate('contact')} className="hover:text-[#f5f5f5] transition-colors">Contact</button></li>
+                <li><button onClick={() => onNavigate('admin')} className="hover:text-[#f5f5f5] transition-colors">Admin</button></li>
               </ul>
             </div>
             <div>

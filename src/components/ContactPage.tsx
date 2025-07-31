@@ -2,7 +2,7 @@ import React from 'react';
 import BrandrLogo from './BrandrLogo';
 
 type ContactPageProps = {
-  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'contact' | 'privacy' | 'terms' | 'cookies') => void;
+  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'contact' | 'admin' | 'privacy' | 'terms' | 'cookies') => void;
 };
 
 const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
