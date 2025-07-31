@@ -17,12 +17,15 @@ const BrandrLogo: React.FC<BrandrLogoProps> = ({ className = '', size = 'md', va
   const iconSrc = '/src/assets/logo-icon.png';
   const brandrSrc = '/src/assets/logo-brandr.png';
 
+  // Apply filter for white variant on dark backgrounds
+  const filterStyle = variant === 'white' ? { filter: 'brightness(0) invert(1)' } : {};
+
   return (
     <img
       src={iconOnly ? iconSrc : brandrSrc}
       alt={iconOnly ? 'Brandr Logo Icon' : 'Brandr Logo'}
       className={`${sizeClasses[size]} ${className}`}
-      style={{ objectFit: 'contain', width: 'auto' }}
+      style={{ objectFit: 'contain', width: 'auto', ...filterStyle }}
     />
   );
 };

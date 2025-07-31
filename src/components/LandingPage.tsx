@@ -11,8 +11,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [userType, setUserType] = useState<'business' | 'influencer'>('business');
   const [currentReview, setCurrentReview] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [direction, setDirection] = useState<'left' | 'right'>('left');
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
@@ -32,33 +30,22 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   ];
 
   const goToNext = () => {
-    setDirection('left');
     if (currentReview === reviews.length - 1) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentReview(0);
-        setIsTransitioning(false);
-      }, 1000);
+      setCurrentReview(0);
     } else {
       setCurrentReview(prev => prev + 1);
     }
   };
 
   const goToPrevious = () => {
-    setDirection('right');
     if (currentReview === 0) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentReview(reviews.length - 1);
-        setIsTransitioning(false);
-      }, 1000);
+      setCurrentReview(reviews.length - 1);
     } else {
       setCurrentReview(prev => prev - 1);
     }
   };
 
   const goToSlide = (index: number) => {
-    setDirection(index > currentReview ? 'left' : 'right');
     setCurrentReview(index);
   };
 

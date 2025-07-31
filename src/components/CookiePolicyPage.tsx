@@ -1,7 +1,7 @@
 import React from 'react';
 
 type CookiePolicyPageProps = {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'privacy' | 'terms' | 'cookies') => void;
 };
 
 const CookiePolicyPage: React.FC<CookiePolicyPageProps> = ({ onNavigate }) => (

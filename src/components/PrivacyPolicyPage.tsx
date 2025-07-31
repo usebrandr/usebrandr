@@ -1,7 +1,7 @@
 import React from 'react';
 
 type PrivacyPolicyPageProps = {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'privacy' | 'terms' | 'cookies') => void;
 };
 
 const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onNavigate }) => (

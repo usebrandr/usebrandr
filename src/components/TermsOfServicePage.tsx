@@ -1,7 +1,7 @@
 import React from 'react';
 
 type TermsOfServicePageProps = {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'privacy' | 'terms' | 'cookies') => void;
 };
 
 const TermsOfServicePage: React.FC<TermsOfServicePageProps> = ({ onNavigate }) => (
