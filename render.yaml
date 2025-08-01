@@ -2,7 +2,7 @@ services:
   - type: web
     name: brandr-api
     env: node
-    buildCommand: npm install --production
+    buildCommand: cp package-backend.json package.json && npm install
     startCommand: node server.js
     envVars:
       - key: MONGODB_URI
@@ -10,4 +10,4 @@ services:
       - key: NODE_ENV
         value: production
     healthCheckPath: /api/health
-    skipBuildCache: false 
+    skipBuildCache: true 
