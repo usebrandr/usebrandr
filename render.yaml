@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: brandr-api
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://reecebforbes:Banter8612!@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /api/health 
