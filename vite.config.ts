@@ -7,14 +7,13 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    // Remove proxy since we're using demo mode
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:8000',
-    //     changeOrigin: true,
-    //     secure: false,
-    //   }
-    // }
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   },
   build: {
     outDir: 'dist',
