@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:<db_password>@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:YOUR_ACTUAL_PASSWORD@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -13,6 +13,12 @@ export default async function handler(req, res) {
     // Validate email
     if (!email || !email.includes('@')) {
       return res.status(400).json({ error: 'Valid email is required' });
+    }
+
+    // Check if MongoDB URI is properly configured
+    if (!process.env.MONGODB_URI && MONGODB_URI.includes('YOUR_ACTUAL_PASSWORD')) {
+      console.error('MongoDB password not configured');
+      return res.status(500).json({ error: 'Database not configured' });
     }
 
     // Connect to MongoDB

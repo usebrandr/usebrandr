@@ -20,6 +20,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
     setError('');
 
     try {
+      // Try the API endpoint
       const response = await fetch('/api/waitlist', {
         method: 'POST',
         headers: {
@@ -34,9 +35,18 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
       if (response.ok) {
         setIsSubmitted(true);
       } else {
-        setError('Something went wrong. Please try again.');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('API Error:', errorData);
+        
+        // If it's a database configuration error, show a specific message
+        if (errorData.error === 'Database not configured') {
+          setError('Service temporarily unavailable. Please try again later.');
+        } else {
+          setError('Something went wrong. Please try again.');
+        }
       }
     } catch (err) {
+      console.error('Network Error:', err);
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
