@@ -1,0 +1,27 @@
+{
+  "name": "Brandr - AI-Powered Influencer Marketing Platform",
+  "short_name": "Brandr",
+  "description": "AI-powered platform that connects brands with the perfect creators instantly",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/src/assets/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/src/assets/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "social"],
+  "lang": "en",
+  "dir": "ltr"
+} 
