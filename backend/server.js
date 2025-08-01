@@ -56,8 +56,22 @@ const connectToMongoDB = async () => {
   }
 };
 
+// Handle OPTIONS requests explicitly
+app.options('/api/waitlist', (req, res) => {
+  console.log('OPTIONS handler - Setting CORS headers');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.status(200).end();
+});
+
 // API Routes
 app.post('/api/waitlist', async (req, res) => {
+  // Set CORS headers for POST requests
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  
   try {
     const { email, userType } = req.body;
 
