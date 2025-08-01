@@ -1,6 +1,7 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 // Load environment variables
 dotenv.config();
@@ -10,9 +11,44 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(express.json());
+app.use(cors({
+  origin: [
+    'https://usebrandr.com', 
+    'https://www.usebrandr.com',
+    'http://usebrandr.com',
+    'http://www.usebrandr.com',
+    'http://localhost:5173', 
+    'http://localhost:3000',
+    'http://localhost:3001'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-// MongoDB connection
+// MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:Banter8612!@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
+
+// Create a MongoDB client instance
+let mongoClient = null;
+
+const connectToMongoDB = async () => {
+  try {
+    if (!mongoClient) {
+      mongoClient = new MongoClient(MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 45000,
+      });
+      await mongoClient.connect();
+      console.log('Connected to MongoDB successfully');
+    }
+    return mongoClient;
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    throw error;
+  }
+};
 
 // API Routes
 app.post('/api/waitlist', async (req, res) => {
@@ -25,16 +61,13 @@ app.post('/api/waitlist', async (req, res) => {
     }
 
     // Connect to MongoDB
-    const client = new MongoClient(MONGODB_URI);
-    await client.connect();
-
+    const client = await connectToMongoDB();
     const db = client.db('waitlist');
     const collection = db.collection('emails');
 
     // Check if email already exists
     const existingEmail = await collection.findOne({ email: email.toLowerCase() });
     if (existingEmail) {
-      await client.close();
       return res.status(409).json({ error: 'Email already registered' });
     }
 
@@ -45,8 +78,6 @@ app.post('/api/waitlist', async (req, res) => {
       createdAt: new Date(),
       ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
     });
-
-    await client.close();
 
     console.log(`New waitlist signup: ${email} (${userType})`);
     
@@ -65,15 +96,11 @@ app.post('/api/waitlist', async (req, res) => {
 app.get('/api/status', async (req, res) => {
   try {
     // Connect to MongoDB
-    const client = new MongoClient(MONGODB_URI);
-    await client.connect();
-
+    const client = await connectToMongoDB();
     const db = client.db('waitlist');
     
     // Test connection with ping
     await db.command({ ping: 1 });
-
-    await client.close();
 
     return res.status(200).json({ 
       status: 'ok',
@@ -95,6 +122,15 @@ app.get('/api/status', async (req, res) => {
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'API server is running' });
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  if (mongoClient) {
+    await mongoClient.close();
+    console.log('MongoDB connection closed');
+  }
+  process.exit(0);
 });
 
 app.listen(PORT, () => {

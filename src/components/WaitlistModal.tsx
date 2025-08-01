@@ -19,9 +19,18 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
     setIsLoading(true);
     setError('');
 
+    // Determine API URL based on environment
+    const isDevelopment = window.location.hostname === 'localhost';
+    const apiBaseUrl = isDevelopment 
+      ? 'http://localhost:3001' 
+      : 'https://brand-api-sxnu.onrender.com';
+    
+    const apiUrl = `${apiBaseUrl}/api/waitlist`;
+
     try {
-      // Try the API endpoint
-      const response = await fetch('/api/waitlist', {
+      console.log('Attempting to connect to:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,10 +41,12 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
         }),
       });
 
-      if (response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      
+      if (response.ok || response.status === 409) {
+        // 409 means email already registered, which is fine
         setIsSubmitted(true);
       } else {
-        const errorData = await response.json().catch(() => ({}));
         console.error('API Error:', errorData);
         
         // If it's a database configuration error, show a specific message
