@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:<db_password>@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:Banter8612!@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
 
 // API Routes
 app.post('/api/waitlist', async (req, res) => {
