@@ -11,20 +11,40 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: [
-    'https://usebrandr.com', 
-    'https://www.usebrandr.com',
-    'http://usebrandr.com',
-    'http://www.usebrandr.com',
-    'http://localhost:5173', 
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ],
+
+// More explicit CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://usebrandr.com', 
+      'https://www.usebrandr.com',
+      'http://usebrandr.com',
+      'http://www.usebrandr.com',
+      'http://localhost:5173', 
+      'http://localhost:3000',
+      'http://localhost:3001'
+    ];
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
+
+// Add a preflight handler for debugging
+app.options('*', cors(corsOptions));
 
 // MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:Banter8612!@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
@@ -136,4 +156,13 @@ process.on('SIGINT', async () => {
 app.listen(PORT, () => {
   console.log(`API Server running on port ${PORT}`);
   console.log(`MongoDB URI: ${MONGODB_URI.replace(/\/\/.*@/, '//***:***@')}`);
+  console.log('CORS enabled for origins:', [
+    'https://usebrandr.com', 
+    'https://www.usebrandr.com',
+    'http://usebrandr.com',
+    'http://www.usebrandr.com',
+    'http://localhost:5173', 
+    'http://localhost:3000',
+    'http://localhost:3001'
+  ]);
 }); 
