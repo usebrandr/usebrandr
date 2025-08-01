@@ -9,32 +9,28 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(express.json());
-
-// Simple CORS configuration - allow all origins for now
-app.use(cors({
-  origin: true, // Allow all origins
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  optionsSuccessStatus: 200
-}));
-
-// Add explicit CORS headers for all routes
+// CORS middleware - MUST be first
 app.use((req, res, next) => {
-  console.log('Request origin:', req.headers.origin);
+  console.log('CORS middleware - Request origin:', req.headers.origin);
+  console.log('CORS middleware - Request method:', req.method);
+  
+  // Set CORS headers
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    console.log('Handling OPTIONS request');
-    res.sendStatus(200);
-  } else {
-    next();
+    console.log('CORS middleware - Handling OPTIONS preflight');
+    res.status(200).end();
+    return;
   }
+  
+  next();
 });
+
+// Other middleware
+app.use(express.json());
 
 // MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:Banter8612!@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
