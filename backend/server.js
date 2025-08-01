@@ -21,6 +21,21 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
+// Add explicit CORS headers for all routes
+app.use((req, res, next) => {
+  console.log('Request origin:', req.headers.origin);
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  
+  if (req.method === 'OPTIONS') {
+    console.log('Handling OPTIONS request');
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 // MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:Banter8612!@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
 
