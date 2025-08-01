@@ -156,13 +156,6 @@ process.on('SIGINT', async () => {
 app.listen(PORT, () => {
   console.log(`API Server running on port ${PORT}`);
   console.log(`MongoDB URI: ${MONGODB_URI.replace(/\/\/.*@/, '//***:***@')}`);
-  console.log('CORS enabled for origins:', [
-    'https://usebrandr.com', 
-    'https://www.usebrandr.com',
-    'http://usebrandr.com',
-    'http://www.usebrandr.com',
-    'http://localhost:5173', 
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ]);
+  console.log('CORS enabled for all origins with explicit headers');
+  console.log('Latest deployment: CORS fix applied');
 }); 
