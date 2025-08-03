@@ -6,7 +6,7 @@ A modern, AI-powered influencer marketing platform built with React, TypeScript,
 
 - **Landing Page**: Modern, responsive design with waitlist signup
 - **Contact Form**: Dedicated contact page with form submission
-- **Admin Dashboard**: MongoDB status monitoring and system management
+- **Waitlist Management**: Email collection and user type tracking
 - **Backend API**: Express.js server with MongoDB integration
 - **Waitlist Management**: Email collection and storage in MongoDB
 
@@ -124,7 +124,7 @@ Checks MongoDB connection status.
 │   ├── components/
 │   │   ├── LandingPage.tsx      # Main landing page
 │   │   ├── ContactPage.tsx      # Contact form page
-│   │   ├── AdminDashboard.tsx   # Admin monitoring
+│   │   ├── WaitlistModal.tsx   # Waitlist signup modal
 │   │   ├── WaitlistModal.tsx    # Waitlist signup modal
 │   │   └── ...
 │   └── ...
@@ -148,11 +148,11 @@ For production backend deployment, consider:
 - Heroku
 - DigitalOcean App Platform
 
-## Admin Access
+## Waitlist Management
 
-Access the admin dashboard by clicking "Admin" in the footer navigation. The dashboard provides:
-- MongoDB connection status
-- System information
+The waitlist system collects emails and user types for future platform access:
+- Email collection and storage
+- User type tracking (business/influencer)
 - Quick actions for monitoring
 
 ## Support
