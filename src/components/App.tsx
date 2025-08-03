@@ -3,12 +3,12 @@ import LandingPage from './LandingPage';
 import AboutPage from './AboutPage';
 import FAQsPage from './FAQsPage';
 import ContactPage from './ContactPage';
-import AdminDashboard from './AdminDashboard';
+
 import PrivacyPolicyPage from './PrivacyPolicyPage';
 import TermsOfServicePage from './TermsOfServicePage';
 import CookiePolicyPage from './CookiePolicyPage';
 
-type AppState = 'landing' | 'about' | 'faqs' | 'contact' | 'admin' | 'privacy' | 'terms' | 'cookies';
+type AppState = 'landing' | 'about' | 'faqs' | 'contact' | 'privacy' | 'terms' | 'cookies';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('landing');
@@ -24,8 +24,7 @@ function App() {
                   return <FAQsPage onNavigate={handleNavigate} />;
                 case 'contact':
                   return <ContactPage onNavigate={handleNavigate} />;
-                case 'admin':
-                  return <AdminDashboard onNavigate={handleNavigate} />;
+
                 case 'privacy':
                   return <PrivacyPolicyPage onNavigate={handleNavigate} />;
                 case 'terms':

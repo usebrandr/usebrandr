@@ -19,19 +19,19 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
     setIsLoading(true);
     setError('');
 
-    // Determine API URL based on environment
+    // Use direct API with CORS mode
     const isDevelopment = window.location.hostname === 'localhost';
-    const apiBaseUrl = isDevelopment 
-      ? 'http://localhost:3001' 
-      : 'https://brand-api-sxnu.onrender.com';
-    
-    const apiUrl = `${apiBaseUrl}/api/waitlist`;
+    const apiUrl = isDevelopment 
+      ? 'http://localhost:3001/api/waitlist'
+      : 'https://brand-api-sxnu.onrender.com/api/waitlist';
 
     try {
       console.log('Attempting to connect to:', apiUrl);
       
       const response = await fetch(apiUrl, {
         method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
         headers: {
           'Content-Type': 'application/json',
         },

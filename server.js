@@ -27,7 +27,7 @@ app.use(cors({
 }));
 
 // MongoDB connection with better error handling
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://reecebforbes:Banter8612!@waitlist.zwsho5.mongodb.net/?retryWrites=true&w=majority&appName=Waitlist';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // Create a MongoDB client instance
 let mongoClient = null;
