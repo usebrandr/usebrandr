@@ -15,6 +15,8 @@ function App() {
 
   const handleNavigate = (state: AppState) => {
     setAppState(state);
+    // Scroll to top when navigating to a new page
+    window.scrollTo(0, 0);
   };
 
                 switch (appState) {

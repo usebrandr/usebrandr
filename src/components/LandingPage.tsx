@@ -92,12 +92,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       {/* Navigation */}
       <nav className="relative z-20 flex items-center justify-between px-6 lg:px-8 py-4 bg-[#1c1c1c]/90 backdrop-blur-sm border-b border-gray-700">
         <div className="flex items-center space-x-4">
-          <BrandrLogo size="md" variant="white" />
+          <button onClick={() => onNavigate('landing')} className="hover:opacity-80 transition-opacity">
+            <BrandrLogo size="md" variant="white" />
+          </button>
         </div>
-                            <div className="flex items-center space-x-8">
-                      <button onClick={() => onNavigate('about')} className="text-[#f5f5f5] hover:text-white transition-colors font-medium text-lg">About Us</button>
-                      <button onClick={() => onNavigate('faqs')} className="text-[#f5f5f5] hover:text-white transition-colors font-medium text-lg">FAQs</button>
-                    </div>
+        <div className="flex items-center space-x-8">
+          <button onClick={() => onNavigate('about')} className="text-[#f5f5f5] hover:text-white transition-colors font-medium text-lg">About Us</button>
+          <button onClick={() => onNavigate('faqs')} className="text-[#f5f5f5] hover:text-white transition-colors font-medium text-lg">FAQs</button>
+        </div>
       </nav>
 
       {/* Hero Section */}

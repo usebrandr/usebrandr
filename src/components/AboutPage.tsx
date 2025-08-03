@@ -14,7 +14,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       {/* Navigation */}
       <nav className="relative z-20 flex items-center justify-between p-4 lg:px-8 bg-[#1c1c1c]/90 backdrop-blur-sm border-b border-gray-700">
         <div className="flex items-center space-x-4">
-          <BrandrLogo size="md" variant="white" />
+          <button onClick={() => onNavigate('landing')} className="hover:opacity-80 transition-opacity">
+            <BrandrLogo size="md" variant="white" />
+          </button>
         </div>
         <div className="flex items-center space-x-6">
           <button
@@ -85,7 +87,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       <footer className="border-t border-gray-700 py-20 px-10 bg-[#1c1c1c]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center space-x-4 mb-6 md:mb-0">
-            <BrandrLogo size="md" variant="white" />
+            <button onClick={() => onNavigate('landing')} className="hover:opacity-80 transition-opacity">
+              <BrandrLogo size="md" variant="white" />
+            </button>
           </div>
           <div className="flex space-x-8">
             <button onClick={() => onNavigate('terms')} className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors">Terms</button>
