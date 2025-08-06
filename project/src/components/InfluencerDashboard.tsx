@@ -281,7 +281,7 @@ const InfluencerDashboard: React.FC<InfluencerDashboardProps> = ({ onLogout }) =
         <div className="p-6">
           <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'space-x-5'}`}>
             {sidebarCollapsed ? (
-              <BrandrLogo size="md" showText={false} />
+              <BrandrLogo size="md" />
             ) : (
               <BrandrLogo size="lg" />
             )}

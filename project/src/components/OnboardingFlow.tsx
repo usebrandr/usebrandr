@@ -450,3 +450,5 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     </div>
   );
 };
+
+export default OnboardingFlow;

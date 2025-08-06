@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import WaitlistModal from './WaitlistModal';
 import { Briefcase, User, Users, Target, Shield, Zap, ArrowRight, CheckCircle, Building, Lightbulb, ChevronDown, Star, TrendingUp, Clock, DollarSign, Eye, MessageSquare, Play, X } from 'lucide-react';
-import SignupModal from './SignupModal';
+
 import BrandrLogo from './BrandrLogo';
 
 interface LandingPageProps {

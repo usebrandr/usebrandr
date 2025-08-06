@@ -13,16 +13,16 @@ import {
   DollarSign,
   Sparkles
 } from 'lucide-react';
-import CampaignBuilderModal from './CampaignBuilderModal';
+import BrandrLogo from './BrandrLogo';
 import CampaignCreationFlow from './CampaignCreationFlow';
 import CampaignDetailsModal from './CampaignDetailsModal';
-import BrandrLogo from './BrandrLogo';
 
 interface DashboardProps {
   onLogout: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
+  console.log('Dashboard component rendering');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showCampaignBuilder, setShowCampaignBuilder] = useState(false);
@@ -88,7 +88,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     }
   ];
 
-  const openCampaignBuilder = () => setShowCampaignCreationFlow(true);
+  const openCampaignBuilder = () => {
+    console.log('Create Campaign button clicked');
+    setShowCampaignCreationFlow(true);
+  };
 
   const handleCampaignCreated = (campaign: any) => {
     console.log('Campaign created:', campaign);
@@ -97,15 +100,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       console.log('Updated campaigns:', newCampaigns);
       return newCampaigns;
     });
-    setShowCampaignCreationFlow(false);
   };
 
   const handleCampaignClick = (campaign: any) => {
     console.log('Campaign clicked:', campaign);
-    console.log('Setting selectedCampaign and showCampaignDetails to true');
     setSelectedCampaign(campaign);
     setShowCampaignDetails(true);
-    console.log('State should be updated now');
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -403,39 +403,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         </div>
       </div>
 
-      {/* Campaign Creation Flow */}
-      {showCampaignCreationFlow && (
-        <CampaignCreationFlow
-          onClose={() => setShowCampaignCreationFlow(false)}
-          onCampaignCreated={handleCampaignCreated}
-        />
-      )}
 
-      {/* Campaign Details Modal */}
-      {showCampaignDetails && selectedCampaign && (
-        <>
-          {console.log('Rendering CampaignDetailsModal with:', selectedCampaign)}
-          <CampaignDetailsModal
-            campaign={selectedCampaign}
-            onClose={() => {
-              console.log('Closing modal');
-              setShowCampaignDetails(false);
-              setSelectedCampaign(null);
-            }}
-          />
-        </>
-      )}
-
-      {/* Campaign Builder Modal */}
-      <CampaignBuilderModal
-        isOpen={showCampaignBuilder}
-        onClose={() => setShowCampaignBuilder(false)}
-        onLaunch={data => {
-          setShowCampaignBuilder(false);
-          // Optionally: show a toast or log data
-          console.log('Campaign launched:', data);
-        }}
-      />
 
       {/* Campaign Summary Modal */}
       {showSummary && (
@@ -484,6 +452,25 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Campaign Creation Flow */}
+      {showCampaignCreationFlow && (
+        <CampaignCreationFlow
+          onClose={() => setShowCampaignCreationFlow(false)}
+          onCampaignCreated={handleCampaignCreated}
+        />
+      )}
+
+      {/* Campaign Details Modal */}
+      {showCampaignDetails && selectedCampaign && (
+        <CampaignDetailsModal
+          campaign={selectedCampaign}
+          onClose={() => {
+            setShowCampaignDetails(false);
+            setSelectedCampaign(null);
+          }}
+        />
       )}
     </div>
   );
