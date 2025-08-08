@@ -3,7 +3,7 @@ import WaitlistModal from './WaitlistModal';
 import { Briefcase, User, Users, Target, Shield, Zap, ArrowRight, CheckCircle, Building, Lightbulb, ChevronDown, Star, TrendingUp, Clock, DollarSign, Eye, MessageSquare, Play, Pause, X } from 'lucide-react';
 
 import BrandrLogo from './BrandrLogo';
-import MetricsMatrix from './MetricsMatrix';
+import MondayBackground from './MondayBackground';
 import MouseGlow from './MouseGlow';
 
 interface LandingPageProps {
@@ -95,8 +95,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
 
             {/* Hero Section */}
       <section id="hero" className="relative h-screen flex items-center overflow-hidden bg-black -mt-20">
-        {/* Metrics Matrix Background */}
-        <MetricsMatrix />
+        {/* Monday.com Style Background */}
+        <MondayBackground />
         
                 {/* Hero Content - Left Side */}
         <div className="flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10">
