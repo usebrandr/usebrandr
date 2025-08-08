@@ -5,6 +5,7 @@ import { Briefcase, User, Users, Target, Shield, Zap, ArrowRight, CheckCircle, B
 import BrandrLogo from './BrandrLogo';
 import MetricsMatrix from './MetricsMatrix';
 import MouseGlow from './MouseGlow';
+import OrganicArcs from './OrganicArcs';
 
 interface LandingPageProps {
   onShowLogin: () => void;
@@ -82,7 +83,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
       <MouseGlow />
       
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-transparent backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-transparent border-b border-white/20">
         <div className="flex items-center space-x-4">
           <BrandrLogo size="lg" />
         </div>
@@ -97,6 +98,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
       <section id="hero" className="relative h-screen flex items-center overflow-hidden bg-black -mt-20">
         {/* Metrics Matrix Background */}
         <MetricsMatrix />
+        
+        {/* Organic Arcs Background */}
+        <OrganicArcs />
         
                 {/* Hero Content - Left Side */}
         <div className="flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10">

@@ -53,4 +53,19 @@
     }
   }
 
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(-50%) translate(0px, 0px) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-50%) translate(-10px, -5px) rotate(0.5deg);
+    }
+    50% {
+      transform: translateY(-50%) translate(5px, -10px) rotate(-0.3deg);
+    }
+    75% {
+      transform: translateY(-50%) translate(-5px, 5px) rotate(0.2deg);
+    }
+  }
+
 }
