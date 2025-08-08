@@ -63,7 +63,7 @@ const OrganicArcs: React.FC = () => {
         alt="Top left decoration"
         style={{
           position: 'absolute',
-          top: '200px',
+          top: '150px',
           left: '0px',
           width: '600px',
           height: '600px',
