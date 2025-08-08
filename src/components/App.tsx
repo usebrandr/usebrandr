@@ -4,12 +4,14 @@ import LandingPage from './LandingPage';
 import LoginModal from './LoginModal';
 import OnboardingFlow from './OnboardingFlow';
 import AboutPage from './AboutPage';
-import BlogPage from './BlogPage';
 import FAQsPage from './FAQsPage';
+import TermsPage from './TermsPage';
+import PrivacyPage from './PrivacyPage';
+import ContactPage from './ContactPage';
 import InfluencerDashboard from './InfluencerDashboard';
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<'landing' | 'dashboard' | 'influencer-dashboard' | 'about' | 'blog' | 'faqs'>('landing');
+  const [currentPage, setCurrentPage] = useState<'landing' | 'dashboard' | 'influencer-dashboard' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact'>('landing');
   const [showLogin, setShowLogin] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Set to false to show landing page by default
@@ -34,7 +36,7 @@ const App: React.FC = () => {
     setCurrentPage('landing');
   };
 
-  const handleNavigate = (page: 'landing' | 'about' | 'blog' | 'faqs') => {
+  const handleNavigate = (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact') => {
     setCurrentPage(page);
   };
 
@@ -57,8 +59,10 @@ const App: React.FC = () => {
           />
         )}
         {currentPage === 'about' && <AboutPage onNavigate={handleNavigate} />}
-        {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} />}
         {currentPage === 'faqs' && <FAQsPage onNavigate={handleNavigate} />}
+        {currentPage === 'terms' && <TermsPage onNavigate={handleNavigate} />}
+        {currentPage === 'privacy' && <PrivacyPage onNavigate={handleNavigate} />}
+        {currentPage === 'contact' && <ContactPage onNavigate={handleNavigate} />}
         
         {showLogin && (
           <LoginModal 
@@ -81,7 +85,6 @@ const App: React.FC = () => {
     <>
       {currentPage === 'dashboard' && <Dashboard onLogout={handleLogout} />}
       {currentPage === 'about' && <AboutPage onNavigate={handleNavigate} />}
-      {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} />}
       {currentPage === 'faqs' && <FAQsPage onNavigate={handleNavigate} />}
       
       {showLogin && (

@@ -57,31 +57,31 @@ const OrganicArcs: React.FC = () => {
         }}
       />
       
-      {/* Top Left - Different Image */}
-      <img
-        src="/top-left-new.webp"
-        alt="Top left decoration"
-        style={{
-          position: 'absolute',
-          top: '150px',
-          left: '0px',
-          width: '600px',
-          height: '600px',
-          opacity: 1,
-          filter: 'brightness(1.2) contrast(1.1) saturate(1.1) drop-shadow(0 0 15px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.2))',
-          pointerEvents: 'none',
-          objectFit: 'cover',
-          transform: `scale(${scale})`,
-          transition: 'transform 0.1s ease-out',
-          animation: 'float 8s ease-in-out infinite'
-        }}
-        onError={(e) => {
-          console.error('Image failed to load:', e);
-        }}
-        onLoad={() => {
-          console.log('Image loaded successfully');
-        }}
-      />
+                        {/* Top Left - Different Image */}
+                  <img
+                    src="/top-left-new.webp"
+                    alt="Top left decoration"
+                    style={{
+                      position: 'absolute',
+                      top: '100px',
+                      left: '0px',
+                      width: '600px',
+                      height: '600px',
+                      opacity: 1,
+                      filter: 'brightness(1.2) contrast(1.1) saturate(1.1) drop-shadow(0 0 15px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.2))',
+                      pointerEvents: 'none',
+                      objectFit: 'cover',
+                      transform: `scale(${scale})`,
+                      transition: 'transform 0.1s ease-out',
+                      animation: 'float 8s ease-in-out infinite'
+                    }}
+                    onError={(e) => {
+                      console.error('Image failed to load:', e);
+                    }}
+                    onLoad={() => {
+                      console.log('Image loaded successfully');
+                    }}
+                  />
       
 
     </div>

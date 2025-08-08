@@ -1,14 +1,18 @@
 import React from 'react';
 import { Zap, ArrowLeft } from 'lucide-react';
 import BrandrLogo from './BrandrLogo';
+import MouseGlow from './MouseGlow';
 
 interface AboutPageProps {
-  onNavigate: (page: 'landing' | 'about' | 'blog' | 'faqs') => void;
+  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact') => void;
 }
 
 const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Mouse Glow Effect */}
+      <MouseGlow />
+      
       {/* Navigation */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-transparent backdrop-blur-xl">
         <div className="flex items-center space-x-4">
@@ -17,7 +21,6 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         
         <div className="flex items-center space-x-8">
           <button onClick={() => onNavigate('landing')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">Back to Home</button>
-          <button onClick={() => onNavigate('blog')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">Blog</button>
           <button onClick={() => onNavigate('faqs')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">FAQs</button>
         </div>
       </nav>
@@ -29,10 +32,13 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full mb-12"></div>
           <div className="space-y-8 text-xl leading-relaxed">
             <p className="text-white/90">
-              We believe organic marketing beats paid ads. Brandr exists to help founders grow by partnering with creators who actually care. No middlemen, no fake metrics — just real partnerships that drive real growth.
+              We're a team of engineers, designers, and marketers who believe that authentic partnerships drive real growth. We've seen too many brands waste money on creators who don't align with their values, and too many creators stuck with campaigns that don't resonate with their audience.
             </p>
             <p className="text-white/90">
-              We're building a future where every startup can connect directly with the right influencer, and every creator gets access to meaningful campaigns — not spammy promo.
+              Our approach is Brand Identity Analysis: we analyze a brand's website or social presence to extract its tone, values, aesthetic, and audience positioning. This allows us to match each business with the exact creators who naturally align — visually, tonally, and culturally.
+            </p>
+            <p className="text-white/90">
+              In the future, Brandr becomes the infrastructure layer for influencer marketing. Every campaign launched through our platform teaches the system more about what works, what resonates, and which creators drive outcomes for which brands.
             </p>
           </div>
         </div>
@@ -51,19 +57,19 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Zap className="w-8 h-8 text-blue-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Authentic Connections</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">Brand Identity</h3>
               <p className="text-white/70 leading-relaxed">
-                We connect brands with creators who genuinely align with their values and audience, ensuring authentic partnerships.
+                Every brand gets a dynamic "Brand Identity" profile that evolves with each campaign, becoming increasingly precise.
               </p>
             </div>
             
             <div className="bg-black/40 backdrop-blur-sm p-8 rounded-3xl border border-white/10 text-center shadow-xl">
-              <div className="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Zap className="w-8 h-8 text-orange-400" />
+              <div className="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Zap className="w-8 h-8 text-purple-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Transparent Process</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Matching</h3>
               <p className="text-white/70 leading-relaxed">
-                No hidden fees, no fake metrics. We provide clear, honest data and straightforward pricing for all parties.
+                Our system becomes the go-to AI layer for matching brands and creators, with smarter recommendations over time.
               </p>
             </div>
             
@@ -71,9 +77,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               <div className="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Zap className="w-8 h-8 text-green-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4">Mutual Growth</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">Infrastructure Layer</h3>
               <p className="text-white/70 leading-relaxed">
-                We believe in win-win partnerships where both brands and creators achieve their goals and grow together.
+                We automate targeting, pricing, content guidance, and attribution — becoming the essential infrastructure for organic growth.
               </p>
             </div>
           </div>
@@ -87,9 +93,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             <BrandrLogo size="lg" />
           </div>
           <div className="flex space-x-12">
-            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Terms</button>
-            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Privacy</button>
-            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Contact</button>
+            <button onClick={() => onNavigate('terms')} className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Terms</button>
+            <button onClick={() => onNavigate('privacy')} className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Privacy</button>
+            <button onClick={() => onNavigate('contact')} className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Contact</button>
           </div>
         </div>
       </footer>
