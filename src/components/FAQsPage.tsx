@@ -8,44 +8,28 @@ interface FAQsPageProps {
 
 const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
   return (
-    <div className="min-h-screen bg-[#1c1c1c] text-[#f5f5f5]">
+    <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
-      <nav className="relative z-20 flex items-center justify-between p-4 lg:px-8 bg-[#1c1c1c]/90 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-transparent backdrop-blur-xl">
         <div className="flex items-center space-x-4">
           <BrandrLogo size="lg" />
         </div>
         
-        <div className="flex items-center space-x-6">
-          <button
-            onClick={() => onNavigate('landing')}
-            className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium flex items-center space-x-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
-          </button>
-          <button
-            onClick={() => onNavigate('about')}
-            className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium"
-          >
-            About Us
-          </button>
-          <button
-            onClick={() => onNavigate('blog')}
-            className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium"
-          >
-            Blog
-          </button>
+        <div className="flex items-center space-x-8">
+          <button onClick={() => onNavigate('landing')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">Back to Home</button>
+          <button onClick={() => onNavigate('about')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">About Us</button>
+          <button onClick={() => onNavigate('blog')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">Blog</button>
         </div>
       </nav>
 
       {/* FAQs Section */}
-      <div className="py-24 px-6 bg-gradient-to-b from-[#2a2a2a] to-[#1c1c1c]">
+      <div className="py-24 px-6 bg-black">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-5xl lg:text-6xl font-bold text-[#f5f5f5] mb-6">Frequently Asked Questions</h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-600 mx-auto rounded-full mb-6"></div>
-            <p className="text-xl text-[#f5f5f5]/80 leading-relaxed">
-              Everything you need to know about getting started with InfluenceConnect.
+            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">Frequently Asked Questions</h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full mb-6"></div>
+            <p className="text-xl text-white/80 leading-relaxed">
+              Everything you need to know about getting started with Brandr.
             </p>
           </div>
           
@@ -87,16 +71,15 @@ const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-[#f5f5f5]/10 py-20 px-10 bg-[#1c1c1c]">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+      <footer className="border-t border-white/10 py-24 px-6 lg:px-8 bg-black">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center space-x-4 mb-6 md:mb-0">
             <BrandrLogo size="lg" />
           </div>
-          
-          <div className="flex space-x-8">
-            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors">Terms</button>
-            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors">Privacy</button>
-            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors">Contact</button>
+          <div className="flex space-x-12">
+            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Terms</button>
+            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Privacy</button>
+            <button className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Contact</button>
           </div>
         </div>
       </footer>
@@ -114,21 +97,21 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-gradient-to-br from-[#2a2a2a] to-[#333] rounded-2xl border border-[#f5f5f5]/10 overflow-hidden hover:border-purple-500/30 transition-all duration-300">
+    <div className="bg-black/40 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden hover:border-blue-500/30 transition-all duration-300 shadow-xl">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-[#444]/30 transition-colors"
+        className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
       >
-        <span className="text-xl font-semibold text-[#f5f5f5]">{question}</span>
+        <span className="text-xl font-semibold text-white">{question}</span>
         <ChevronDown 
-          className={`w-6 h-6 text-[#f5f5f5]/70 transition-transform duration-300 ${
+          className={`w-6 h-6 text-white/70 transition-transform duration-300 ${
             isOpen ? 'rotate-180' : ''
           }`} 
         />
       </button>
       {isOpen && (
         <div className="px-8 pb-6">
-          <p className="text-[#f5f5f5]/80 leading-relaxed text-lg">{answer}</p>
+          <p className="text-white/80 leading-relaxed text-lg">{answer}</p>
         </div>
       )}
     </div>

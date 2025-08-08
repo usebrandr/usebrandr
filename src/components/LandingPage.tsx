@@ -89,11 +89,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
         <div className="flex items-center space-x-8">
           <button onClick={() => onNavigate('about')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">About Us</button>
           <button onClick={() => onNavigate('faqs')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">FAQs</button>
-          <button onClick={onShowLogin} className="px-10 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105">Sign In</button>
+          <button onClick={onShowLogin} className="px-10 py-4 text-lg font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105">Sign In</button>
         </div>
       </nav>
 
-      {/* Hero Section */}
+            {/* Hero Section */}
       <section id="hero" className="relative h-screen flex items-center overflow-hidden bg-black -mt-20">
         {/* Metrics Matrix Background */}
         <MetricsMatrix />
@@ -102,7 +102,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
         <div className="flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10">
           <div className="max-w-2xl text-center">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-              The AI to optimise <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">your business's</span> organic marketing.
+              The AI to power <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">your business's</span> organic marketing.
             </h1>
             <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-12 leading-relaxed">
               AI-powered creator matchmaking that delivers real results.
@@ -220,7 +220,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
             </div>
           </div>
         </div>
-      </section>
+        </section>
 
       {/* Why Businesses Use Us */}
       <section id="why-business" className="bg-black py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -277,19 +277,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
             </div>
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-full max-w-2xl">
-                         <h3 className="text-2xl font-bold text-[#f5f5f5] mb-6 text-center">Product Demo</h3>
-                          <video 
-                className="w-full h-[500px] object-cover rounded-3xl shadow-2xl"
-                controls
-                poster="/Product Demo.mp4"
-              >
-              <source src="/Product Demo.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
+
       </section>
 
       {/* Why It Works */}
