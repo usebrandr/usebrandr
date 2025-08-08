@@ -8,10 +8,10 @@ const MondayBackground: React.FC = () => {
     offset: ["start start", "end start"]
   });
 
-  // Create concentric arcs with precise spacing and curvature matching Monday.com
-  const createArcPath = (radius: number, startAngle: number = -45, endAngle: number = 45) => {
-    const centerX = -2000; // Position center much further off-screen to the left (10x extension)
-    const centerY = -2000; // Position center much further off-screen above (10x extension)
+  // Create concentric arcs that extend well beyond the viewport
+  const createArcPath = (radius: number, startAngle: number = -90, endAngle: number = 90) => {
+    const centerX = -400; // Position center off-screen to the left
+    const centerY = -400; // Position center off-screen above
     
     const startX = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
     const startY = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
@@ -23,37 +23,37 @@ const MondayBackground: React.FC = () => {
     return `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`;
   };
 
-  // Generate multiple concentric arcs with Monday.com spacing - extended 10x
+  // Generate concentric arcs that extend far beyond viewport
   const arcs = [];
-  const baseRadius = 3000; // 10x larger base radius
-  const radiusIncrement = 600; // 10x larger spacing between arcs
-  const numArcs = 50; // More arcs to fill the extended area
+  const baseRadius = 500; // Starting radius
+  const radiusIncrement = 80; // Spacing between arcs
+  const numArcs = 60; // More arcs to ensure they extend off-page
   
   for (let i = 0; i < numArcs; i++) {
     const radius = baseRadius + (i * radiusIncrement);
-    const opacity = Math.max(0.08, 0.4 - (i * 0.008)); // Much higher base opacity, more visible
-    const strokeWidth = i < 10 ? 1.2 : 1.0; // Slightly thicker for better visibility
+    const opacity = Math.max(0.03, 0.25 - (i * 0.003)); // Higher base opacity, slower fade
+    const strokeWidth = i < 15 ? 0.8 : 0.6; // Slightly thicker for closer arcs
     
     arcs.push({
       id: i,
       radius,
       opacity,
       strokeWidth,
-      path: createArcPath(radius, -80, 80), // Wider arc sweep for better coverage
-      animationDelay: i * 0.05 // Faster animation sequence
+      path: createArcPath(radius, -100, 100), // Wider sweep to ensure off-page finish
+      animationDelay: i * 0.03
     });
   }
 
   return (
-    <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-      {/* Main SVG container - much larger to accommodate 10x extension */}
+    <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+      {/* Extended SVG container to accommodate long arcs */}
       <motion.svg
-        className="absolute inset-0 w-[500%] h-[500%] -top-[200%] -left-[200%]"
-        viewBox="0 0 10000 7500"
+        className="absolute inset-0 w-[300%] h-[300%] -top-[100%] -left-[100%]"
+        viewBox="0 0 3000 2250"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style={{
-          y: useTransform(scrollYProgress, [0, 1], [0, -100]),
+          y: useTransform(scrollYProgress, [0, 1], [0, -50]),
         }}
       >
         {/* Render all concentric arcs */}
@@ -72,26 +72,26 @@ const MondayBackground: React.FC = () => {
               opacity: arc.opacity,
             }}
             transition={{
-              pathLength: { duration: 1.5, delay: arc.animationDelay, ease: "easeOut" },
-              opacity: { duration: 0.8, delay: arc.animationDelay }
+              pathLength: { duration: 1.8, delay: arc.animationDelay, ease: "easeOut" },
+              opacity: { duration: 1, delay: arc.animationDelay }
             }}
             style={{
-              filter: 'blur(0.2px)', // Less blur for sharper visibility
+              filter: 'blur(0.3px)',
             }}
           />
         ))}
         
-        {/* Additional fine detail arcs for authenticity - also extended */}
-        {Array.from({ length: 30 }, (_, i) => {
+        {/* Additional fine detail arcs for authenticity */}
+        {Array.from({ length: 40 }, (_, i) => {
           const radius = baseRadius + (i * radiusIncrement) + (radiusIncrement / 2);
-          const opacity = Math.max(0.04, 0.2 - (i * 0.006)); // Higher opacity for detail arcs
+          const opacity = Math.max(0.02, 0.15 - (i * 0.002));
           
           return (
             <motion.path
               key={`detail-${i}`}
-              d={createArcPath(radius, -70, 70)}
+              d={createArcPath(radius, -95, 95)}
               stroke="rgba(255, 255, 255, 0.8)"
-              strokeWidth={0.8}
+              strokeWidth={0.5}
               fill="none"
               opacity={opacity}
               strokeLinecap="round"
@@ -101,19 +101,19 @@ const MondayBackground: React.FC = () => {
                 opacity: opacity,
               }}
               transition={{
-                pathLength: { duration: 2, delay: i * 0.08, ease: "easeOut" },
-                opacity: { duration: 1, delay: i * 0.08 }
+                pathLength: { duration: 2.2, delay: i * 0.05, ease: "easeOut" },
+                opacity: { duration: 1.2, delay: i * 0.05 }
               }}
               style={{
-                filter: 'blur(0.3px)',
+                filter: 'blur(0.4px)',
               }}
             />
           );
         })}
       </motion.svg>
       
-      {/* Subtle gradient overlay to enhance the effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/10 pointer-events-none" />
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/5 pointer-events-none" />
     </div>
   );
 };
