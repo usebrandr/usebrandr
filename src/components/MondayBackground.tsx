@@ -8,112 +8,140 @@ const MondayBackground: React.FC = () => {
     offset: ["start start", "end start"]
   });
 
-  // Create concentric arcs that extend well beyond the viewport
-  const createArcPath = (radius: number, startAngle: number = -100, endAngle: number = 100) => {
-    const centerX = -400; // Position center off-screen to the left
-    const centerY = -400; // Position center off-screen above
+  // Create organic, hand-drawn style arc paths with subtle imperfections
+  const createOrganicArcPath = (
+    centerX: number, 
+    centerY: number, 
+    baseRadius: number, 
+    startAngle: number = -90, 
+    endAngle: number = 90,
+    imperfectionSeed: number = 0
+  ) => {
+    // Add subtle variations to make arcs feel hand-drawn
+    const radiusVariation = 0.05 + (Math.sin(imperfectionSeed * 3.14159) * 0.03); // 2-8% variation
+    const ellipseRatio = 0.85 + (Math.cos(imperfectionSeed * 2.1) * 0.1); // Slight elliptical distortion
+    const angleOffset = Math.sin(imperfectionSeed * 1.7) * 3; // Small angle wobble
     
-    const startX = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
-    const startY = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
-    const endX = centerX + radius * Math.cos((endAngle * Math.PI) / 180);
-    const endY = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
+    // Create multiple control points for organic curve
+    const points = [];
+    const numPoints = 8; // More points for smoother organic curves
     
-    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    for (let i = 0; i <= numPoints; i++) {
+      const progress = i / numPoints;
+      const angle = startAngle + (endAngle - startAngle) * progress + angleOffset * Math.sin(progress * 3.14159);
+      
+      // Add subtle radius variations along the arc
+      const localRadiusVar = 1 + (Math.sin(progress * 6.28 + imperfectionSeed) * 0.02);
+      const radius = baseRadius * (1 + radiusVariation) * localRadiusVar;
+      
+      const x = centerX + radius * Math.cos((angle * Math.PI) / 180);
+      const y = centerY + radius * ellipseRatio * Math.sin((angle * Math.PI) / 180);
+      
+      points.push({ x, y });
+    }
     
-    return `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`;
+    // Create smooth path using quadratic curves for organic feel
+    let path = `M ${points[0].x} ${points[0].y}`;
+    
+    for (let i = 1; i < points.length - 1; i++) {
+      const current = points[i];
+      const next = points[i + 1];
+      const controlX = current.x + (next.x - current.x) * 0.5;
+      const controlY = current.y + (next.y - current.y) * 0.5;
+      
+      path += ` Q ${current.x} ${current.y} ${controlX} ${controlY}`;
+    }
+    
+    // Final point
+    const lastPoint = points[points.length - 1];
+    path += ` T ${lastPoint.x} ${lastPoint.y}`;
+    
+    return path;
   };
 
-  // Generate concentric arcs that extend far beyond viewport
-  const arcs = [];
-  const baseRadius = 300; // Starting radius
-  const radiusIncrement = 60; // Spacing between arcs
-  const numArcs = 60; // More arcs to ensure they extend off-page
+  // Generate organic arcs for top-left corner
+  const topLeftArcs = [];
+  const baseRadius = 400;
+  const radiusIncrement = 120;
+  const numArcs = 6;
   
   for (let i = 0; i < numArcs; i++) {
     const radius = baseRadius + (i * radiusIncrement);
-    const opacity = Math.max(0.03, 0.25 - (i * 0.003)); // Higher base opacity, slower fade
-    const strokeWidth = i < 20 ? 1.0 : 0.8; // Slightly thicker for closer arcs
+    const opacity = Math.max(0.03, 0.10 - (i * 0.012));
+    const strokeWidth = i < 3 ? 1.0 : 0.8;
+    const imperfectionSeed = i * 2.3 + 1.7; // Different seed for each arc
     
-    arcs.push({
-      id: i,
+    topLeftArcs.push({
+      id: `tl-${i}`,
       radius,
       opacity,
       strokeWidth,
-      path: createArcPath(radius, -100, 100), // Wider sweep to ensure off-page finish
-      animationDelay: i * 0.05
+      path: createOrganicArcPath(-1000, -1000, radius, -100, 80, imperfectionSeed),
+      animationDelay: i * 0.15
     });
   }
 
+  // Generate organic arcs for bottom-right corner (mirrored)
+  const bottomRightArcs = [];
+  
+  for (let i = 0; i < numArcs; i++) {
+    const radius = baseRadius + (i * radiusIncrement);
+    const opacity = Math.max(0.03, 0.10 - (i * 0.012));
+    const strokeWidth = i < 3 ? 1.0 : 0.8;
+    const imperfectionSeed = i * 2.7 + 3.1; // Different seed pattern
+    
+    bottomRightArcs.push({
+      id: `br-${i}`,
+      radius,
+      opacity,
+      strokeWidth,
+      path: createOrganicArcPath(2000, 1500, radius, 100, 280, imperfectionSeed),
+      animationDelay: i * 0.15 + 0.5
+    });
+  }
+
+  const allArcs = [...topLeftArcs, ...bottomRightArcs];
+
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-      {/* Extended SVG container to accommodate long arcs */}
       <motion.svg
-        className="absolute inset-0 w-[300%] h-[300%] -top-[100%] -left-[100%]"
-        viewBox="0 0 3000 2250"
+        className="absolute inset-0 w-[400%] h-[400%] -top-[150%] -left-[150%]"
+        viewBox="0 0 4000 3000"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style={{
-          y: useTransform(scrollYProgress, [0, 1], [0, -50]),
+          y: useTransform(scrollYProgress, [0, 1], [0, -30]),
         }}
       >
-        {/* Render all concentric arcs */}
-        {arcs.map((arc) => (
+        {/* Render all organic arcs */}
+        {allArcs.map((arc) => (
           <motion.path
             key={arc.id}
             d={arc.path}
-            stroke="rgba(255, 255, 255, 0.9)"
+            stroke="rgba(255, 255, 255, 0.07)"
             strokeWidth={arc.strokeWidth}
             fill="none"
             opacity={arc.opacity}
             strokeLinecap="round"
+            strokeLinejoin="round"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ 
               pathLength: 1, 
               opacity: arc.opacity,
             }}
             transition={{
-              pathLength: { duration: 2.5, delay: arc.animationDelay, ease: "easeOut" },
-              opacity: { duration: 1.2, delay: arc.animationDelay }
+              pathLength: { duration: 2.0, delay: arc.animationDelay, ease: "easeOut" },
+              opacity: { duration: 1.0, delay: arc.animationDelay }
             }}
             style={{
-              filter: 'blur(0.2px)',
+              filter: 'blur(0.1px)', // Very subtle blur for organic feel
             }}
           />
         ))}
-        
-        {/* Additional fine detail arcs for authenticity */}
-        {Array.from({ length: 40 }, (_, i) => {
-          const radius = baseRadius + (i * radiusIncrement) + (radiusIncrement / 2);
-          const opacity = Math.max(0.02, 0.15 - (i * 0.002));
-          
-          return (
-            <motion.path
-              key={`detail-${i}`}
-              d={createArcPath(radius, -95, 95)}
-              stroke="rgba(255, 255, 255, 0.8)"
-              strokeWidth={0.6}
-              fill="none"
-              opacity={opacity}
-              strokeLinecap="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ 
-                pathLength: 1, 
-                opacity: opacity,
-              }}
-              transition={{
-                pathLength: { duration: 2.0, delay: i * 0.06, ease: "easeOut" },
-                opacity: { duration: 1.0, delay: i * 0.06 }
-              }}
-              style={{
-                filter: 'blur(0.3px)',
-              }}
-            />
-          );
-        })}
       </motion.svg>
       
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/3 pointer-events-none" />
+      {/* Subtle gradient overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/2 pointer-events-none" />
     </div>
   );
 };
