@@ -181,6 +181,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
         {/* Organic Arcs Background */}
         <OrganicArcs />
         
+        {/* Background Metrics */}
+        <div className="absolute inset-0 pointer-events-none z-5">
+          {/* Top Left Metric */}
+          <div className="absolute top-40 left-10 transform -rotate-12">
+            <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-lg p-1 border border-blue-500/30">
+              <div className="text-center">
+                <div className="text-sm font-bold text-blue-400 mb-1">94%</div>
+                <div className="text-xs text-blue-300/80">Brand Match Rate</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Top Right Metric */}
+          <div className="absolute top-32 right-16 transform rotate-12">
+            <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-1 border border-green-500/30">
+              <div className="text-center">
+                <div className="text-sm font-bold text-green-400 mb-1">3.2x</div>
+                <div className="text-xs text-green-300/80">ROI Increase</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Bottom Center Metric */}
+          <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2">
+            <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm rounded-lg p-1 border border-orange-500/30">
+              <div className="text-center">
+                <div className="text-sm font-bold text-orange-400 mb-1">24hr</div>
+                <div className="text-xs text-orange-300/80">Campaign Launch</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         {/* Hero Content - Left Side */}
         <div className="flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10">
           <div className="max-w-2xl text-center">
