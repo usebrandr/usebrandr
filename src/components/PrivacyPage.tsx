@@ -251,13 +251,8 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
           <section className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-white mb-4">13. Contact Us</h2>
             <p className="text-white/80 leading-relaxed mb-4">
-              If you have any questions about this Privacy Policy or our data practices, please contact us at info@usebrandr.com:
+              If you have any questions about this Privacy Policy or our data practices, please contact us at info@usebrandr.com.
             </p>
-            <div className="space-y-2 text-white/80">
-              <p>Email: privacy@brandr.com</p>
-              <p>Data Protection Officer: dpo@brandr.com</p>
-              <p>Address: [Your Business Address]</p>
-            </div>
           </section>
         </div>
       </div>
