@@ -1,0 +1,20 @@
+{
+  "name": "brandr-platform",
+  "version": "1.0.0",
+  "description": "Brandr Platform - Django Backend + React Frontend",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && source ../venv/bin/activate && python manage.py runserver 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd frontend && npm install",
+    "setup": "npm run install:all && python -m venv venv && source venv/bin/activate && cd backend && pip install -r requirements.txt"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": ["django", "react", "authentication", "platform"],
+  "author": "Brandr Team",
+  "license": "MIT"
+}
+
+
