@@ -82,7 +82,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
       <MouseGlow />
       
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-transparent backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-black/20 backdrop-blur-xl">
         <div className="flex items-center space-x-4">
           <BrandrLogo size="lg" />
         </div>
