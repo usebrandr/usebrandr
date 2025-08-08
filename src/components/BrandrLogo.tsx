@@ -2,9 +2,10 @@ import React from 'react';
 
 interface BrandrLogoProps {
   size?: 'sm' | 'md' | 'lg';
+  onClick?: () => void;
 }
 
-const BrandrLogo: React.FC<BrandrLogoProps> = ({ size = 'md' }) => {
+const BrandrLogo: React.FC<BrandrLogoProps> = ({ size = 'md', onClick }) => {
   const sizeClasses = {
     sm: 'h-6',
     md: 'h-8', 
@@ -15,7 +16,8 @@ const BrandrLogo: React.FC<BrandrLogoProps> = ({ size = 'md' }) => {
     <img 
       src={size === 'sm' ? "/logo-icon.png" : "/logo.png"}
       alt="Brandr Logo" 
-      className={sizeClasses[size]}
+      className={`${sizeClasses[size]} ${onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+      onClick={onClick}
     />
   );
 };

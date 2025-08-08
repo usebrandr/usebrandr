@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BrandrLogo from './BrandrLogo';
 import MouseGlow from './MouseGlow';
 
@@ -7,6 +7,10 @@ interface TermsPageProps {
 }
 
 const TermsPage: React.FC<TermsPageProps> = ({ onNavigate }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Mouse Glow Effect */}
@@ -191,12 +195,8 @@ const TermsPage: React.FC<TermsPageProps> = ({ onNavigate }) => {
           <section className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-white mb-4">12. Contact Information</h2>
             <p className="text-white/80 leading-relaxed">
-              If you have any questions about these Terms, please contact us at info@usebrandr.com:
+              If you have any questions about these Terms, please contact us at info@usebrandr.com.
             </p>
-            <div className="mt-4 space-y-2 text-white/80">
-              <p>Email: legal@brandr.com</p>
-              <p>Address: [Your Business Address]</p>
-            </div>
           </section>
         </div>
       </div>

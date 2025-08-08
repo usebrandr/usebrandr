@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Zap, ArrowLeft, ChevronDown } from 'lucide-react';
 import BrandrLogo from './BrandrLogo';
 import MouseGlow from './MouseGlow';
@@ -8,6 +8,10 @@ interface FAQsPageProps {
 }
 
 const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Mouse Glow Effect */}

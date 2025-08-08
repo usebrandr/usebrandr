@@ -158,7 +158,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
       {/* Navigation */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-8 py-4 bg-transparent border-b border-white/20">
         <div className="flex items-center space-x-4">
-          <BrandrLogo size="lg" />
+          <BrandrLogo 
+            size="lg" 
+            onClick={() => {
+              onNavigate('landing');
+              window.scrollTo(0, 0);
+            }}
+          />
         </div>
         <div className="flex items-center space-x-8">
           <button onClick={() => onNavigate('about')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-lg">About Us</button>
@@ -522,28 +528,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
             Join the waitlist and be among the first to experience AI-powered creator matchmaking that delivers real results.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={() => {
-                setWaitlistType('business');
-                setShowWaitlist(true);
-              }}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-lg transform hover:scale-105 flex items-center space-x-2"
-            >
-              <Briefcase className="w-5 h-5" />
-              <span>Join as Business</span>
-            </button>
-            
-            <button
-              onClick={() => {
-                setWaitlistType('influencer');
-                setShowWaitlist(true);
-              }}
-              className="px-8 py-4 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/20 transition-all duration-200 border border-white/20 flex items-center space-x-2"
-            >
-              <User className="w-5 h-5" />
-              <span>Join as Creator</span>
-            </button>
+          <div className="max-w-md mx-auto">
+            <div className="flex bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
+              <button
+                onClick={() => setWaitlistType('business')}
+                className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
+                  waitlistType === 'business'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                    : 'text-white hover:bg-white/10'
+                }`}
+              >
+                <Briefcase className="w-5 h-5" />
+                <span>I'm a Business</span>
+              </button>
+              <button
+                onClick={() => setWaitlistType('influencer')}
+                className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
+                  waitlistType === 'influencer'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                    : 'text-white hover:bg-white/10'
+                }`}
+              >
+                <User className="w-5 h-5" />
+                <span>I'm a Creator</span>
+              </button>
+            </div>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setShowWaitlist(true)}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-lg transform hover:scale-105"
+              >
+                Join the Waitlist
+              </button>
+            </div>
           </div>
           
           <p className="text-white/60 mt-6 text-sm">
@@ -556,7 +573,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
       <footer className="border-t border-white/10 py-24 px-6 lg:px-8 bg-black">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center space-x-4 mb-6 md:mb-0">
-            <BrandrLogo size="lg" />
+            <BrandrLogo 
+              size="lg" 
+              onClick={() => {
+                onNavigate('landing');
+                window.scrollTo(0, 0);
+              }}
+            />
           </div>
           <div className="flex space-x-12">
             <button onClick={() => onNavigate('terms')} className="text-[#f5f5f5]/70 hover:text-[#f5f5f5] transition-colors text-lg">Terms</button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BrandrLogo from './BrandrLogo';
 import MouseGlow from './MouseGlow';
 
@@ -7,6 +7,10 @@ interface PrivacyPageProps {
 }
 
 const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Mouse Glow Effect */}

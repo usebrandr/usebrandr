@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Mail, MapPin, ArrowLeft } from 'lucide-react';
 import BrandrLogo from './BrandrLogo';
+import MouseGlow from './MouseGlow';
 
 interface ContactPageProps {
   onNavigate: (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy') => void;
 }
 
 const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Mouse Glow Effect */}

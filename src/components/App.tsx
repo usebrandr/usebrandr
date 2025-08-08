@@ -38,6 +38,8 @@ const App: React.FC = () => {
 
   const handleNavigate = (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact') => {
     setCurrentPage(page);
+    // Scroll to top when navigating to a new page
+    window.scrollTo(0, 0);
   };
 
   const handleOnboardingComplete = () => {
