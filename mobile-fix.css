@@ -1,23 +1,28 @@
-/* Mobile Layout Fix - Aggressive Override */
+/* Mobile Layout Fix - Extended Hero Approach */
 @media (max-width: 1023px) {
-  /* Override all hero section styles */
+  /* Extend hero section height and create space */
   section#hero {
+    min-height: 120vh !important;
+    height: 120vh !important;
     margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    padding-top: 8rem !important;
-    padding-bottom: 0 !important;
-    min-height: auto !important;
-    height: auto !important;
+    padding-top: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
+    overflow: hidden !important;
   }
   
-  /* Force navigation to be fixed and visible */
+  /* Move SVG background up */
+  section#hero > div:first-child {
+    position: absolute !important;
+    top: -20vh !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 140vh !important;
+    z-index: 1 !important;
+  }
+  
+  /* Force navigation to be fixed */
   nav.sticky {
     position: fixed !important;
     top: 0 !important;
@@ -26,33 +31,29 @@
     z-index: 9999 !important;
     background: rgba(0, 0, 0, 0.95) !important;
     backdrop-filter: blur(15px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
   
-  /* Override any negative margins */
-  section#hero.-mt-20,
-  section#hero[class*="-mt-"] {
-    margin-top: 0 !important;
-  }
-  
-  /* Force mobile layout structure */
-  section#hero > div:first-of-type {
+  /* Push all content down below header */
+  section#hero > div:nth-child(2) {
+    margin-top: 15vh !important;
+    padding-top: 5rem !important;
     order: 1 !important;
     width: 100% !important;
     flex: none !important;
-    padding: 2rem 1rem !important;
-    margin: 0 !important;
+    z-index: 10 !important;
+    position: relative !important;
   }
   
-  section#hero > div:last-of-type {
+  section#hero > div:nth-child(3) {
     order: 2 !important;
     width: 100% !important;
     flex: none !important;
-    padding: 0 1rem 2rem 1rem !important;
-    margin: 0 !important;
+    padding: 2rem 1rem !important;
+    z-index: 10 !important;
+    position: relative !important;
   }
   
-  /* Ensure video is visible and properly sized */
+  /* Ensure video is visible */
   section#hero video {
     height: 250px !important;
     width: 100% !important;
@@ -60,7 +61,7 @@
     border-radius: 8px !important;
   }
   
-  /* Hide desktop layout completely */
+  /* Hide desktop layout */
   .lg\\:flex,
   div[class*="lg:flex"] {
     display: none !important;
@@ -73,13 +74,9 @@
     flex-direction: column !important;
   }
   
-  /* Additional body/html overrides */
-  body {
-    padding-top: 0 !important;
+  /* Override any negative margins */
+  section#hero.-mt-20,
+  section#hero[class*="-mt-"] {
     margin-top: 0 !important;
-  }
-  
-  html {
-    scroll-padding-top: 5rem !important;
   }
 }
