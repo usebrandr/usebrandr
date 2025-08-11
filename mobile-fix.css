@@ -6,7 +6,8 @@
     flex-direction: column !important;
     min-height: auto !important;
     margin-top: 0 !important;
-    padding-top: 5rem !important;
+    padding-top: 6rem !important;
+    position: relative !important;
   }
   
   /* Hero content - top */
@@ -40,5 +41,16 @@
   /* Show mobile layout */
   .lg\\:hidden {
     display: flex !important;
+  }
+  
+  /* Fix navigation positioning */
+  nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    background: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
   }
 }
