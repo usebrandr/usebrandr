@@ -1,0 +1,42 @@
+/* Mobile Layout Fix */
+@media (max-width: 1023px) {
+  /* Force mobile layout */
+  #hero {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: auto !important;
+  }
+  
+  /* Hero content - top */
+  #hero > div:first-of-type {
+    order: 1 !important;
+    width: 100% !important;
+    flex: none !important;
+    padding: 3rem 2rem !important;
+  }
+  
+  /* Demo video - bottom */
+  #hero > div:last-of-type {
+    order: 2 !important;
+    width: 100% !important;
+    flex: none !important;
+    padding: 0 2rem 3rem 2rem !important;
+  }
+  
+  /* Ensure video is visible */
+  #hero video {
+    height: 300px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+  
+  /* Hide desktop layout on mobile */
+  .lg\\:flex {
+    display: none !important;
+  }
+  
+  /* Show mobile layout */
+  .lg\\:hidden {
+    display: flex !important;
+  }
+}
