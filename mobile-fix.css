@@ -1,10 +1,10 @@
 /* Mobile Layout Fix - Simple Header Bottom Approach */
 @media (max-width: 1023px) {
-  /* Make hero section start at bottom of header */
+  /* Make hero section start at bottom of header and be taller on mobile */
   section#hero {
-    margin-top: 0 !important;
-    padding-top: 4rem !important;
-    min-height: auto !important;
+    margin-top: 0 !important;            /* neutralize -mt-20 */
+    padding-top: 6rem !important;        /* create space under header */
+    min-height: 110vh !important;        /* make hero taller on mobile */
     display: flex !important;
     flex-direction: column !important;
     position: relative !important;
@@ -70,9 +70,8 @@
 @media (max-width: 1023px) {
   /* Add top padding to the mobile-only wrapper inside hero */
   section#hero .lg\:hidden {
-    /* Ensure hero starts below sticky header and iOS safe area */
-    padding-top: calc(96px + env(safe-area-inset-top)) !important;
-    scroll-margin-top: calc(96px + env(safe-area-inset-top)) !important;
+    padding-top: 0 !important;     /* rely on hero container padding */
+    scroll-margin-top: 0 !important;
   }
 
   /* Move decorative SVGs further up so they don't visually collide with header */
