@@ -5,8 +5,15 @@
   html body #root section#hero > .absolute.inset-0.w-full.h-full.pointer-events-none { display: none !important; }
   html body #root section#hero > div[style*="pointer-events"] { display: none !important; }
   /* Hide floating metrics overlay on mobile */
-  html body #root section#hero .pointer-events-none.z-5 {
-    display: none !important;
+  html body #root section#hero .pointer-events-none.z-5,
+  html body #root section#hero .absolute.inset-0,
+  html body #root section#hero .absolute.top-40,
+  html body #root section#hero .absolute.top-32,
+  html body #root section#hero .absolute.bottom-32,
+  html body #root section#hero [class*="pointer-events-none"],
+  html body #root section#hero [style*="pointer-events"],
+  html body #root section#hero > .absolute { 
+    display: none !important; 
   }
   /* Force hero to stack vertically and add strong gap before Product Demo */
   html body #root section#hero { flex-direction: column !important; }
