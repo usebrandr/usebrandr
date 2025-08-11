@@ -112,7 +112,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin: _onShowLogin, on
         />
         
         {/* Hero Content - Top on mobile, Left on desktop */}
-        <div className="flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10 py-12 lg:py-0">
+        <div className="w-full lg:flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10 py-12 lg:py-0">
           <div className="max-w-2xl text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 lg:mb-8 leading-tight">
               The AI to optimise <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">your business's</span> organic marketing.
@@ -160,7 +160,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin: _onShowLogin, on
         </div>
         
         {/* Product Demo - Bottom on mobile, Right on desktop */}
-        <div className="flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10 pb-12 lg:pb-0">
+        <div className="w-full lg:flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10 pb-12 lg:pb-0">
           <div className="relative w-full max-w-2xl">
             <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">Product Demo</h3>
             <div className="relative group border-2 border-white/20 rounded-3xl p-2">
