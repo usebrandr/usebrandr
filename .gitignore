@@ -1,0 +1,8 @@
+.env
+node_modules
+project/frontend/node_modules
+project/frontend/dist
+project/backend/__pycache__
+project/db.sqlite3
+.DS_Store
+
