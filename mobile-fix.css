@@ -1,5 +1,10 @@
 /* Mobile Layout Fix - Simple Header Bottom Approach */
 @media (max-width: 1023px) {
+  /* Force hero to stack vertically and add strong gap before Product Demo */
+  html body #root section#hero { flex-direction: column !important; }
+  html body #root section#hero > div.flex-1 + div.flex-1 { margin-top: 2.5rem !important; }
+  html body #root section#hero h3 { margin-top: 1rem !important; }
+
   /* Make hero section start further below header and be taller on mobile */
   html body #root section#hero {
     margin-top: 0 !important;                             /* neutralize -mt-20 */
@@ -113,6 +118,13 @@
     width: 100% !important;
     height: auto !important;
     max-height: 70vh !important;
+    object-fit: contain !important;
+    background: transparent !important;
+  }
+  /* Also cover any image inside the 500px viewer */
+  html body #root .relative.w-full.h-\[500px\] img { 
+    width: 100% !important;
+    height: auto !important;
     object-fit: contain !important;
     background: transparent !important;
   }
