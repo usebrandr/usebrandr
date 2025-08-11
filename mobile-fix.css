@@ -1,25 +1,13 @@
-/* Mobile Layout Fix - Extended Hero Approach */
+/* Mobile Layout Fix - Simple Header Bottom Approach */
 @media (max-width: 1023px) {
-  /* Extend hero section height and create space */
+  /* Make hero section start at bottom of header */
   section#hero {
-    min-height: 120vh !important;
-    height: 120vh !important;
     margin-top: 0 !important;
-    padding-top: 0 !important;
+    padding-top: 4rem !important;
+    min-height: auto !important;
     display: flex !important;
     flex-direction: column !important;
     position: relative !important;
-    overflow: hidden !important;
-  }
-  
-  /* Move SVG background up */
-  section#hero > div:first-child {
-    position: absolute !important;
-    top: -20vh !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: 140vh !important;
-    z-index: 1 !important;
   }
   
   /* Force navigation to be fixed */
@@ -33,24 +21,21 @@
     backdrop-filter: blur(15px) !important;
   }
   
-  /* Push all content down below header */
-  section#hero > div:nth-child(2) {
-    margin-top: 15vh !important;
-    padding-top: 5rem !important;
+  /* Mobile layout structure */
+  section#hero > div:first-of-type {
     order: 1 !important;
-    width: 100% !important;
-    flex: none !important;
-    z-index: 10 !important;
-    position: relative !important;
-  }
-  
-  section#hero > div:nth-child(3) {
-    order: 2 !important;
     width: 100% !important;
     flex: none !important;
     padding: 2rem 1rem !important;
     z-index: 10 !important;
-    position: relative !important;
+  }
+  
+  section#hero > div:last-of-type {
+    order: 2 !important;
+    width: 100% !important;
+    flex: none !important;
+    padding: 0 1rem 2rem 1rem !important;
+    z-index: 10 !important;
   }
   
   /* Ensure video is visible */
