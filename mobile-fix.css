@@ -23,6 +23,14 @@
   html body #root section#hero .lg\:hidden > div:first-of-type {
     margin-bottom: 1rem !important;
   }
+
+  /* Add more space between Join the Waitlist and Product Demo */
+  html body #root section#hero .lg\:hidden > div:last-of-type {
+    margin-top: 3rem !important; /* increase gap before Product Demo */
+  }
+  html body #root section#hero .lg\:hidden h3 {
+    margin-top: 0.75rem !important;
+  }
   
   /* Force navigation to be fixed */
   nav.sticky {
@@ -91,5 +99,21 @@
   /* Move decorative SVGs further up so they don't visually collide with header */
   section#hero img[alt*="decorative"] {
     top: -120px !important;
+  }
+
+  /* Explore our features: fit container to image and remove letterboxing */
+  html body #root .relative.max-w-4xl.mx-auto > .relative {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  html body #root .relative.w-full.h-\[500px\] {
+    height: auto !important;
+  }
+  html body #root .relative.max-w-4xl.mx-auto img.w-full.h-full.object-contain {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 70vh !important;
+    object-fit: contain !important;
+    background: transparent !important;
   }
 }
