@@ -27,7 +27,7 @@ import {
   CreditCard,
   Send
 } from 'lucide-react';
-import BrandrLogo from './common/BrandrLogo';
+import BrandrLogo from './BrandrLogo';
 
 interface InfluencerDashboardProps {
   onLogout: () => void;
@@ -326,7 +326,7 @@ const InfluencerDashboard: React.FC<InfluencerDashboardProps> = ({ onLogout }) =
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-8 py-6">
+        <div className="sticky top-0 z-40 bg-white/40 backdrop-blur-sm border-b border-gray-200/30 px-8 py-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Zap, ArrowLeft, ArrowRight } from 'lucide-react';
-import BrandrLogo from './common/BrandrLogo';
+import BrandrLogo from './BrandrLogo';
 
 interface BlogPageProps {
   onNavigate: (page: 'landing' | 'about' | 'blog' | 'faqs') => void;

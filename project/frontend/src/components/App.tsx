@@ -1,76 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Dashboard from './Dashboard';
 import LandingPage from './LandingPage';
 import LoginModal from './LoginModal';
 import OnboardingFlow from './OnboardingFlow';
 import AboutPage from './AboutPage';
-import BlogPage from './BlogPage';
 import FAQsPage from './FAQsPage';
-import { api } from '../utils/api';
+import TermsPage from './TermsPage';
+import PrivacyPage from './PrivacyPage';
+import ContactPage from './ContactPage';
+import InfluencerDashboard from './InfluencerDashboard';
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<'landing' | 'dashboard' | 'about' | 'blog' | 'faqs'>('landing');
+  const [currentPage, setCurrentPage] = useState<'landing' | 'dashboard' | 'influencer-dashboard' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact'>('landing');
   const [showLogin, setShowLogin] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Set to false to show landing page by default
+  const [userType, setUserType] = useState<'business' | 'influencer'>('business');
 
-  // Check authentication status on app load
-  useEffect(() => {
-    const checkAuth = async () => {
-      if (api.auth.isAuthenticated()) {
-        const storedUser = api.auth.getStoredUser();
-        if (storedUser) {
-          setUser(storedUser);
-          setIsLoggedIn(true);
-          setCurrentPage('dashboard');
-        } else {
-          // Try to get current user from API
-          const response = await api.auth.getCurrentUser();
-          if (response.data) {
-            setUser(response.data);
-            setIsLoggedIn(true);
-            setCurrentPage('dashboard');
-          } else {
-            // Clear invalid tokens
-            api.auth.logout();
-          }
-        }
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  const handleLogin = () => {
-    const storedUser = api.auth.getStoredUser();
-    if (storedUser) {
-      setUser(storedUser);
-      setIsLoggedIn(true);
-      setCurrentPage('dashboard');
-    }
+  const handleLogin = (userType: 'business' | 'influencer') => {
+    console.log('Login successful, userType:', userType);
+    setIsLoggedIn(true);
     setShowLogin(false);
+    setUserType(userType);
+    setCurrentPage('dashboard'); // Set currentPage to dashboard when logging in
+    console.log('App state updated - isLoggedIn:', true, 'userType:', userType, 'currentPage: dashboard');
   };
 
-  const handleSignup = () => {
-    const storedUser = api.auth.getStoredUser();
-    if (storedUser) {
-      setUser(storedUser);
-      setIsLoggedIn(true);
-      setCurrentPage('dashboard');
-    }
-    setShowLogin(false);
+  const handleSignup = (userType: 'business' | 'influencer') => {
+    setShowOnboarding(true);
+    setUserType(userType);
   };
 
-  const handleLogout = async () => {
-    await api.auth.logout();
+  const handleLogout = () => {
     setIsLoggedIn(false);
-    setUser(null);
     setCurrentPage('landing');
   };
 
-  const handleNavigate = (page: 'landing' | 'about' | 'blog' | 'faqs') => {
+  const handleNavigate = (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact') => {
     setCurrentPage(page);
+    // Scroll to top when navigating to a new page
+    window.scrollTo(0, 0);
   };
 
   const handleOnboardingComplete = () => {
@@ -87,13 +56,15 @@ const App: React.FC = () => {
       <>
         {currentPage === 'landing' && (
           <LandingPage 
-            onShowLogin={() => setShowLogin(true)}
+            onShowLogin={() => { /* removed Sign In button usage */ }}
             onNavigate={handleNavigate}
           />
         )}
         {currentPage === 'about' && <AboutPage onNavigate={handleNavigate} />}
-        {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} />}
         {currentPage === 'faqs' && <FAQsPage onNavigate={handleNavigate} />}
+        {currentPage === 'terms' && <TermsPage onNavigate={handleNavigate} />}
+        {currentPage === 'privacy' && <PrivacyPage onNavigate={handleNavigate} />}
+        {currentPage === 'contact' && <ContactPage onNavigate={handleNavigate} />}
         
         {showLogin && (
           <LoginModal 
@@ -106,11 +77,16 @@ const App: React.FC = () => {
     );
   }
 
+  if (userType === 'influencer') {
+    console.log('Rendering InfluencerDashboard');
+    return <InfluencerDashboard onLogout={handleLogout} />;
+  }
+
+  console.log('Rendering business dashboard, currentPage:', currentPage);
   return (
     <>
-      {currentPage === 'dashboard' && <Dashboard onLogout={handleLogout} user={user} />}
+      {currentPage === 'dashboard' && <Dashboard onLogout={handleLogout} />}
       {currentPage === 'about' && <AboutPage onNavigate={handleNavigate} />}
-      {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} />}
       {currentPage === 'faqs' && <FAQsPage onNavigate={handleNavigate} />}
       
       {showLogin && (
