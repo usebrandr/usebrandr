@@ -93,7 +93,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin: _onShowLogin, on
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="relative min-h-screen flex flex-col lg:flex-row items-center overflow-hidden bg-black -mt-20">
+      <section id="hero" className="relative min-h-screen bg-black -mt-20">
         {/* Metrics Matrix Background */}
         <MetricsMatrix />
 
@@ -111,123 +111,252 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin: _onShowLogin, on
           style={{ animationDuration: '5s' }}
         />
         
-        {/* Hero Content - Top on mobile, Left on desktop */}
-        <div className="w-full lg:flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10 py-12 lg:py-0">
-          <div className="max-w-2xl text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 lg:mb-8 leading-tight">
-              The AI to optimise <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">your business's</span> organic marketing.
-            </h1>
-            <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-white/90 mb-8 lg:mb-12 leading-relaxed">
-              AI-powered creator matchmaking that delivers real results.
-            </p>
-            <div className="max-w-md mx-auto">
-              <div className="space-y-4">
-                <div className="flex bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
-                  <button
-                    onClick={() => setWaitlistType('business')}
-                    className={`flex-1 px-4 md:px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base ${
-                      waitlistType === 'business'
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'text-white hover:bg-white/10'
-                    }`}
-                  >
-                    <Briefcase className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>I'm a Business</span>
-                  </button>
-                  <button
-                    onClick={() => setWaitlistType('influencer')}
-                    className={`flex-1 px-4 md:px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base ${
-                      waitlistType === 'influencer'
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'text-white hover:bg-white/10'
-                    }`}
-                  >
-                    <User className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>I'm a Creator</span>
-                  </button>
+        {/* Desktop Layout - Side by side */}
+        <div className="hidden lg:flex min-h-screen items-center">
+          {/* Hero Content - Left Side */}
+          <div className="flex-1 flex items-center justify-center px-16 relative z-10">
+            <div className="max-w-2xl text-center">
+              <h1 className="text-6xl xl:text-7xl font-bold text-white mb-8 leading-tight">
+                The AI to optimise <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">your business's</span> organic marketing.
+              </h1>
+              <p className="text-xl xl:text-2xl text-white/90 mb-12 leading-relaxed">
+                AI-powered creator matchmaking that delivers real results.
+              </p>
+              <div className="max-w-md mx-auto">
+                <div className="space-y-4">
+                  <div className="flex bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
+                    <button
+                      onClick={() => setWaitlistType('business')}
+                      className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
+                        waitlistType === 'business'
+                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                          : 'text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <Briefcase className="w-5 h-5" />
+                      <span>I'm a Business</span>
+                    </button>
+                    <button
+                      onClick={() => setWaitlistType('influencer')}
+                      className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
+                        waitlistType === 'influencer'
+                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                          : 'text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <User className="w-5 h-5" />
+                      <span>I'm a Creator</span>
+                    </button>
+                  </div>
+                  <div className="flex justify-center">
+                    <button
+                      onClick={handleJoinWaitlist}
+                      className="px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl text-lg transform hover:scale-105"
+                    >
+                      Join the Waitlist
+                    </button>
+                  </div>
                 </div>
-                <div className="flex justify-center">
-                  <button
-                    onClick={handleJoinWaitlist}
-                    className="px-6 md:px-8 py-3 md:py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl text-base md:text-lg transform hover:scale-105"
-                  >
-                    Join the Waitlist
-                  </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Product Demo - Right Side */}
+          <div className="flex-1 flex items-center justify-center px-16 relative z-10">
+            <div className="relative w-full max-w-2xl">
+              <h3 className="text-2xl font-bold text-white mb-6 text-center">Product Demo</h3>
+              <div className="relative group border-2 border-white/20 rounded-3xl p-2">
+                <video 
+                  className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
+                  poster="/video-thumbnail.jpg"
+                  onClick={(e) => {
+                    const video = e.currentTarget as HTMLVideoElement;
+                    if (video.paused) {
+                      video.play();
+                    } else {
+                      video.pause();
+                    }
+                  }}
+                >
+                  <source src="/Product Demo.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                
+                {/* Play/Pause Button */}
+                <button 
+                  className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300 rounded-2xl group-hover:opacity-100 opacity-0"
+                  onClick={(e) => {
+                    const video = e.currentTarget.previousElementSibling as HTMLVideoElement;
+                    if (video.paused) {
+                      video.play();
+                    } else {
+                      video.pause();
+                    }
+                  }}
+                >
+                  <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Play className="w-8 h-8 text-white ml-1" id="play-pause-icon" />
+                  </div>
+                </button>
+                
+                {/* Fullscreen Button */}
+                <button 
+                  className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70"
+                  onClick={(e) => {
+                    const video = e.currentTarget.parentElement?.querySelector('video') as HTMLVideoElement;
+                    if (video) {
+                      if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                      } else {
+                        video.requestFullscreen();
+                      }
+                    }
+                  }}
+                >
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                
+                {/* Progress Bar */}
+                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-black/50 backdrop-blur-sm rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-100"
+                      style={{ width: '0%' }}
+                      id="progress-bar"
+                    ></div>
+                  </div>
+                  <div className="flex justify-between items-center mt-2 text-white text-sm">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
-        {/* Product Demo - Bottom on mobile, Right on desktop */}
-        <div className="w-full lg:flex-1 flex items-center justify-center px-8 lg:px-16 relative z-10 pb-12 lg:pb-0">
-          <div className="relative w-full max-w-2xl">
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">Product Demo</h3>
-            <div className="relative group border-2 border-white/20 rounded-3xl p-2">
-              <video 
-                className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover rounded-2xl shadow-2xl"
-                poster="/video-thumbnail.jpg"
-                onClick={(e) => {
-                  const video = e.currentTarget as HTMLVideoElement;
-                  if (video.paused) {
-                    video.play();
-                  } else {
-                    video.pause();
-                  }
-                }}
-              >
-                <source src="/Product Demo.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              
-              {/* Play/Pause Button */}
-              <button 
-                className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300 rounded-2xl group-hover:opacity-100 opacity-0"
-                onClick={(e) => {
-                  const video = e.currentTarget.previousElementSibling as HTMLVideoElement;
-                  if (video.paused) {
-                    video.play();
-                  } else {
-                    video.pause();
-                  }
-                }}
-              >
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Play className="w-6 h-6 md:w-8 md:h-8 text-white ml-1" id="play-pause-icon" />
+
+        {/* Mobile Layout - Stacked vertically */}
+        <div className="lg:hidden flex flex-col min-h-screen">
+          {/* Hero Content - Top */}
+          <div className="flex-1 flex items-center justify-center px-8 relative z-10 py-12">
+            <div className="max-w-2xl text-center">
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                The AI to optimise <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">your business's</span> organic marketing.
+              </h1>
+              <p className="text-base md:text-lg text-white/90 mb-8 leading-relaxed">
+                AI-powered creator matchmaking that delivers real results.
+              </p>
+              <div className="max-w-md mx-auto">
+                <div className="space-y-4">
+                  <div className="flex bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
+                    <button
+                      onClick={() => setWaitlistType('business')}
+                      className={`flex-1 px-4 md:px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base ${
+                        waitlistType === 'business'
+                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                          : 'text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <Briefcase className="w-4 h-4 md:w-5 md:h-5" />
+                      <span>I'm a Business</span>
+                    </button>
+                    <button
+                      onClick={() => setWaitlistType('influencer')}
+                      className={`flex-1 px-4 md:px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 text-sm md:text-base ${
+                        waitlistType === 'influencer'
+                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                          : 'text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <User className="w-4 h-4 md:w-5 md:h-5" />
+                      <span>I'm a Creator</span>
+                    </button>
+                  </div>
+                  <div className="flex justify-center">
+                    <button
+                      onClick={handleJoinWaitlist}
+                      className="px-6 md:px-8 py-3 md:py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl text-base md:text-lg transform hover:scale-105"
+                    >
+                      Join the Waitlist
+                    </button>
+                  </div>
                 </div>
-              </button>
-              
-              {/* Fullscreen Button */}
-              <button 
-                className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70"
-                onClick={(e) => {
-                  const video = e.currentTarget.parentElement?.querySelector('video') as HTMLVideoElement;
-                  if (video) {
-                    if (document.fullscreenElement) {
-                      document.exitFullscreen();
+              </div>
+            </div>
+          </div>
+          
+          {/* Product Demo - Bottom */}
+          <div className="flex items-center justify-center px-8 relative z-10 pb-12">
+            <div className="relative w-full max-w-2xl">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">Product Demo</h3>
+              <div className="relative group border-2 border-white/20 rounded-3xl p-2">
+                <video 
+                  className="w-full h-[300px] md:h-[400px] object-cover rounded-2xl shadow-2xl"
+                  poster="/video-thumbnail.jpg"
+                  onClick={(e) => {
+                    const video = e.currentTarget as HTMLVideoElement;
+                    if (video.paused) {
+                      video.play();
                     } else {
-                      video.requestFullscreen();
+                      video.pause();
                     }
-                  }
-                }}
-              >
-                <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clipRule="evenodd" />
-                </svg>
-              </button>
-              
-              {/* Progress Bar */}
-              <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="bg-black/50 backdrop-blur-sm rounded-full h-2">
-                  <div 
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-100"
-                    style={{ width: '0%' }}
-                    id="progress-bar"
-                  ></div>
-                </div>
-                <div className="flex justify-between items-center mt-2 text-white text-xs md:text-sm">
-                  <span id="current-time">0:00</span>
-                  <span id="total-time">0:00</span>
+                  }}
+                >
+                  <source src="/Product Demo.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                
+                {/* Play/Pause Button */}
+                <button 
+                  className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300 rounded-2xl group-hover:opacity-100 opacity-0"
+                  onClick={(e) => {
+                    const video = e.currentTarget.previousElementSibling as HTMLVideoElement;
+                    if (video.paused) {
+                      video.play();
+                    } else {
+                      video.pause();
+                    }
+                  }}
+                >
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Play className="w-6 h-6 md:w-8 md:h-8 text-white ml-1" id="play-pause-icon" />
+                  </div>
+                </button>
+                
+                {/* Fullscreen Button */}
+                <button 
+                  className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70"
+                  onClick={(e) => {
+                    const video = e.currentTarget.parentElement?.querySelector('video') as HTMLVideoElement;
+                    if (video) {
+                      if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                      } else {
+                        video.requestFullscreen();
+                      }
+                    }
+                  }}
+                >
+                  <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 11-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                
+                {/* Progress Bar */}
+                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-black/50 backdrop-blur-sm rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-100"
+                      style={{ width: '0%' }}
+                      id="progress-bar"
+                    ></div>
+                  </div>
+                  <div className="flex justify-between items-center mt-2 text-white text-xs md:text-sm">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                  </div>
                 </div>
               </div>
             </div>
