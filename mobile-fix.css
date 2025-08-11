@@ -5,6 +5,8 @@
     display: flex !important;
     flex-direction: column !important;
     min-height: auto !important;
+    margin-top: 0 !important;
+    padding-top: 5rem !important;
   }
   
   /* Hero content - top */
