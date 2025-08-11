@@ -70,7 +70,9 @@
 @media (max-width: 1023px) {
   /* Add top padding to the mobile-only wrapper inside hero */
   section#hero .lg\:hidden {
-    padding-top: 84px !important; /* ~header height to push content below */
+    /* Ensure hero starts below sticky header and iOS safe area */
+    padding-top: calc(96px + env(safe-area-inset-top)) !important;
+    scroll-margin-top: calc(96px + env(safe-area-inset-top)) !important;
   }
 
   /* Move decorative SVGs further up so they don't visually collide with header */
