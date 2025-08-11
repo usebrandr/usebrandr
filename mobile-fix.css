@@ -1,13 +1,19 @@
 /* Mobile Layout Fix - Simple Header Bottom Approach */
 @media (max-width: 1023px) {
-  /* Make hero section start at bottom of header and be taller on mobile */
+  /* Make hero section start further below header and be taller on mobile */
   section#hero {
-    margin-top: 0 !important;            /* neutralize -mt-20 */
-    padding-top: 6rem !important;        /* create space under header */
-    min-height: 110vh !important;        /* make hero taller on mobile */
+    margin-top: 0 !important;                         /* neutralize -mt-20 */
+    padding-top: clamp(120px, 14vh, 160px) !important; /* space under header across devices */
+    padding-bottom: 2rem !important;                   /* breathing room before demo */
+    min-height: 125vh !important;                      /* taller hero on mobile */
     display: flex !important;
     flex-direction: column !important;
     position: relative !important;
+  }
+
+  /* Slight extra spacing between hero content and demo on mobile */
+  section#hero .lg\:hidden > div:first-of-type {
+    margin-bottom: 1rem !important;
   }
   
   /* Force navigation to be fixed */
