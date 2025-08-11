@@ -1,5 +1,9 @@
 /* Mobile Layout Fix - Simple Header Bottom Approach */
 @media (max-width: 1023px) {
+  /* Hide floating metrics overlay on mobile */
+  html body #root section#hero .pointer-events-none.z-5 {
+    display: none !important;
+  }
   /* Force hero to stack vertically and add strong gap before Product Demo */
   html body #root section#hero { flex-direction: column !important; }
   html body #root section#hero > div.flex-1 + div.flex-1 { margin-top: 2.5rem !important; }
