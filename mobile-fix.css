@@ -1,5 +1,9 @@
 /* Mobile Layout Fix - Simple Header Bottom Approach */
 @media (max-width: 1023px) {
+  /* Robustly hide all floating metrics/overlays inside hero on mobile */
+  html body #root section#hero > .absolute.inset-0.pointer-events-none { display: none !important; }
+  html body #root section#hero > .absolute.inset-0.w-full.h-full.pointer-events-none { display: none !important; }
+  html body #root section#hero > div[style*="pointer-events"] { display: none !important; }
   /* Hide floating metrics overlay on mobile */
   html body #root section#hero .pointer-events-none.z-5 {
     display: none !important;
