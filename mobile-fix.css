@@ -65,3 +65,16 @@
     margin-top: 0 !important;
   }
 }
+
+/* Targeted mobile container offset to clear sticky header */
+@media (max-width: 1023px) {
+  /* Add top padding to the mobile-only wrapper inside hero */
+  section#hero .lg\:hidden {
+    padding-top: 84px !important; /* ~header height to push content below */
+  }
+
+  /* Move decorative SVGs further up so they don't visually collide with header */
+  section#hero img[alt*="decorative"] {
+    top: -120px !important;
+  }
+}
