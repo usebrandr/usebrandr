@@ -1,56 +1,85 @@
-/* Mobile Layout Fix */
+/* Mobile Layout Fix - Aggressive Override */
 @media (max-width: 1023px) {
-  /* Force mobile layout */
-  #hero {
+  /* Override all hero section styles */
+  section#hero {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 8rem !important;
+    padding-bottom: 0 !important;
+    min-height: auto !important;
+    height: auto !important;
     display: flex !important;
     flex-direction: column !important;
-    min-height: auto !important;
-    margin-top: 0 !important;
-    padding-top: 6rem !important;
     position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
   }
   
-  /* Hero content - top */
-  #hero > div:first-of-type {
-    order: 1 !important;
-    width: 100% !important;
-    flex: none !important;
-    padding: 3rem 2rem !important;
-  }
-  
-  /* Demo video - bottom */
-  #hero > div:last-of-type {
-    order: 2 !important;
-    width: 100% !important;
-    flex: none !important;
-    padding: 0 2rem 3rem 2rem !important;
-  }
-  
-  /* Ensure video is visible */
-  #hero video {
-    height: 300px !important;
-    width: 100% !important;
-    object-fit: cover !important;
-  }
-  
-  /* Hide desktop layout on mobile */
-  .lg\\:flex {
-    display: none !important;
-  }
-  
-  /* Show mobile layout */
-  .lg\\:hidden {
-    display: flex !important;
-  }
-  
-  /* Fix navigation positioning */
-  nav {
+  /* Force navigation to be fixed and visible */
+  nav.sticky {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    z-index: 1000 !important;
-    background: rgba(0, 0, 0, 0.9) !important;
-    backdrop-filter: blur(10px) !important;
+    z-index: 9999 !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    backdrop-filter: blur(15px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  /* Override any negative margins */
+  section#hero.-mt-20,
+  section#hero[class*="-mt-"] {
+    margin-top: 0 !important;
+  }
+  
+  /* Force mobile layout structure */
+  section#hero > div:first-of-type {
+    order: 1 !important;
+    width: 100% !important;
+    flex: none !important;
+    padding: 2rem 1rem !important;
+    margin: 0 !important;
+  }
+  
+  section#hero > div:last-of-type {
+    order: 2 !important;
+    width: 100% !important;
+    flex: none !important;
+    padding: 0 1rem 2rem 1rem !important;
+    margin: 0 !important;
+  }
+  
+  /* Ensure video is visible and properly sized */
+  section#hero video {
+    height: 250px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+  }
+  
+  /* Hide desktop layout completely */
+  .lg\\:flex,
+  div[class*="lg:flex"] {
+    display: none !important;
+  }
+  
+  /* Show mobile layout */
+  .lg\\:hidden,
+  div[class*="lg:hidden"] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  /* Additional body/html overrides */
+  body {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  
+  html {
+    scroll-padding-top: 5rem !important;
   }
 }
