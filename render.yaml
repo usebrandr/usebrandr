@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: brandr-waitlist-api
+    rootDir: .
+    env: node
+    buildCommand: "npm install --production"
+    startCommand: "npm start"
+    healthCheckPath: "/health"
+    autoDeploy: true
+    plan: free
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false

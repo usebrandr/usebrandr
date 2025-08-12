@@ -1,0 +1,20 @@
+{
+  "name": "brandr-waitlist-api",
+  "version": "1.0.0",
+  "description": "Express API for Brandr waitlist & OpenAI proxy",
+  "main": "project/openai-proxy.cjs",
+  "type": "module",
+  "scripts": {
+    "start": "node project/openai-proxy.cjs"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
