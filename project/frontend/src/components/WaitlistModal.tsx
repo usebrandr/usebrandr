@@ -23,15 +23,21 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
     setIsLoading(true);
     setError('');
 
+    // Determine backend base URL
+    const API_BASE =
+      window.location.hostname === 'localhost'
+        ? 'http://localhost:3001'
+        : 'https://brand-api-sxnu.onrender.com';
+
     try {
-      const response = await fetch('/api/waitlist/join/', {
+      const response = await fetch(`${API_BASE}/api/waitlist/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: email.trim(),
-          userType: userType
+          userType: userType === 'influencer' ? 'creator' : 'business',
         }),
       });
 
