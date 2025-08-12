@@ -24,8 +24,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
     setError('');
 
     try {
-      const base = import.meta.env.VITE_API_BASE_URL || '';
-      const response = await fetch(`${base}/api/waitlist/join/`, {
+      const response = await fetch('/api/waitlist/join/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
