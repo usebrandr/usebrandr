@@ -3,7 +3,10 @@ services:
     name: usebrandr
     env: node
     plan: starter
-    buildCommand: npm install
+    buildCommand: |
+      echo "Building from root directory..."
+      npm install
+      echo "Build completed successfully"
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
