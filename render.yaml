@@ -3,7 +3,11 @@ services:
     name: usebrandr
     env: node
     plan: starter
+    rootDir: .
     buildCommand: |
+      echo "Current directory: $(pwd)"
+      echo "Listing files:"
+      ls -la
       echo "Building from root directory..."
       npm install
       echo "Build completed successfully"
