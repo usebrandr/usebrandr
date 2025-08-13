@@ -13,8 +13,6 @@ services:
         sync: false
       - key: MONGODB_DB
         value: waitlist
-      - key: ENCRYPTION_KEY
-        sync: false
       - key: ALLOWED_ORIGINS
         value: https://usebrandr.com,https://www.usebrandr.com
       - key: OPENAI_API_KEY

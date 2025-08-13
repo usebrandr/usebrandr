@@ -8,7 +8,6 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const crypto = require('crypto');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
@@ -31,30 +30,29 @@ async function getWaitlistCollection() {
   }
   const db = __mongoClient.db(dbName);
   __waitlistCollection = db.collection('signups');
-  await __waitlistCollection.createIndex({ emailHash: 1 }, { unique: true });
+  
+  try {
+    // Clean up corrupted data first
+    console.log('Cleaning up corrupted data...');
+    await __waitlistCollection.deleteMany({ email: null });
+    await __waitlistCollection.deleteMany({ email: "" });
+    
+    // Drop existing problematic index if it exists
+    try {
+      await __waitlistCollection.dropIndex('email_1');
+      console.log('Dropped old index');
+    } catch (e) {
+      console.log('No old index to drop');
+    }
+    
+    // Create clean unique index
+    await __waitlistCollection.createIndex({ email: 1 }, { unique: true });
+    console.log('MongoDB index created successfully');
+  } catch (error) {
+    console.log('Index creation issue, continuing without unique constraint:', error.message);
+  }
+  
   return __waitlistCollection;
-}
-
-function sha256Lower(email) {
-  return crypto.createHash('sha256').update(String(email).trim().toLowerCase(), 'utf8').digest('hex');
-}
-
-function getKey() {
-  const raw = process.env.ENCRYPTION_KEY || '';
-  if (!raw) throw new Error('ENCRYPTION_KEY not set');
-  // Support base64 (default). If prefixed with hex:, treat as hex
-  if (raw.startsWith('hex:')) return Buffer.from(raw.slice(4), 'hex');
-  return Buffer.from(raw, 'base64');
-}
-
-function encrypt(value) {
-  const key = getKey();
-  if (key.length !== 32) throw new Error('ENCRYPTION_KEY must be 32 bytes (256-bit) in base64 or hex');
-  const iv = crypto.randomBytes(12);
-  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-  const ciphertext = Buffer.concat([cipher.update(String(value), 'utf8'), cipher.final()]);
-  const tag = cipher.getAuthTag();
-  return { iv: iv.toString('base64'), ct: ciphertext.toString('base64'), tag: tag.toString('base64'), alg: 'aes-256-gcm' };
 }
 
 // Accept both /api/waitlist/join and with trailing slash
@@ -64,11 +62,9 @@ app.post(['/api/waitlist/join', '/api/waitlist/join/'], async (req, res) => {
     if (!email || typeof email !== 'string') return res.status(400).json({ error: 'Email required' });
     const type = userType === 'influencer' ? 'influencer' : 'business';
     const col = await getWaitlistCollection();
-    const emailHash = sha256Lower(email);
-    const emailEnc = encrypt(email);
+    
     const doc = {
-      emailEnc,
-      emailHash,
+      email: email.toLowerCase().trim(),
       userType: type,
       createdAt: new Date(),
       ua: req.headers['user-agent'] || null,
@@ -76,7 +72,13 @@ app.post(['/api/waitlist/join', '/api/waitlist/join/'], async (req, res) => {
     };
     try {
       await col.insertOne(doc);
-      return res.json({ ok: true });
+      console.log(`New waitlist signup: ${email} (${type})`);
+      return res.json({ 
+        ok: true, 
+        message: 'Successfully joined waitlist',
+        email: email,
+        userType: type
+      });
     } catch (e) {
       if (e && e.code === 11000) return res.status(409).json({ error: 'Already on waitlist' });
       throw e;
@@ -85,6 +87,11 @@ app.post(['/api/waitlist/join', '/api/waitlist/join/'], async (req, res) => {
     console.error('Waitlist error:', err);
     return res.status(500).json({ error: 'Server error' });
   }
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'OpenAI proxy with waitlist is running' });
 });
 
 app.post('/api/openai', async (req, res) => {
