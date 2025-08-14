@@ -28,12 +28,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Serve static files from the root directory
-app.use(express.static(process.cwd()));
+// Serve static files from the frontend/dist directory
+app.use(express.static(path.join(process.cwd(), 'frontend', 'dist')));
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'index.html'));
+  res.sendFile(path.join(process.cwd(), 'frontend', 'dist', 'index.html'));
 });
 
 // MongoDB connection with better error handling
