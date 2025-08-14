@@ -188,5 +188,5 @@ process.on('SIGINT', async () => {
 
 app.listen(PORT, () => {
   console.log(`API Server running on port ${PORT}`);
-  console.log(`MongoDB URI: ${MONGODB_URI.replace(/\/\/.*@/, '//***:***@')}`);
+  console.log(`MongoDB: Connected successfully`);
 }); 
