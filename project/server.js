@@ -177,6 +177,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'API server is running' });
 });
 
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'API server is running' });
+});
+
 // Graceful shutdown
 process.on('SIGINT', async () => {
   if (mongoClient) {
