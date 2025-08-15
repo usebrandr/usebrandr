@@ -19,6 +19,7 @@ app.use(cors({
     'https://www.usebrandr.com',
     'http://usebrandr.com',
     'http://www.usebrandr.com',
+    'https://brand-api-sxnu.onrender.com',
     'http://localhost:5173', 
     'http://localhost:3000',
     'http://localhost:3001'
@@ -169,6 +170,66 @@ app.get('/api/status', async (req, res) => {
       error: error.message,
       timestamp: new Date().toISOString()
     });
+  }
+});
+
+// Specific route for the root of external brand API
+app.get('/api/brand', async (req, res) => {
+  try {
+    console.log('Proxying root request to external brand API');
+    const response = await fetch('https://brand-api-sxnu.onrender.com/');
+    
+    // Check content type to determine how to handle response
+    const contentType = response.headers.get('content-type');
+    
+    if (contentType && contentType.includes('application/json')) {
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } else {
+      // For HTML or other content types, send as text
+      const data = await response.text();
+      res.status(response.status).type(contentType || 'text/html').send(data);
+    }
+  } catch (error) {
+    console.error('Root proxy error:', error);
+    res.status(500).json({ error: 'Failed to proxy request to external API' });
+  }
+});
+
+// Proxy route to external brand API (place this AFTER your existing API routes)
+app.use('/api/brand', async (req, res) => {
+  try {
+    const externalApiUrl = 'https://brand-api-sxnu.onrender.com';
+    const targetPath = req.path.replace('/api/brand', '');
+    const targetUrl = `${externalApiUrl}${targetPath}`;
+    
+    console.log(`Proxying request: ${req.method} ${targetUrl}`);
+    
+    // Forward the request to the external API
+    const response = await fetch(targetUrl, {
+      method: req.method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...req.headers,
+        'host': new URL(externalApiUrl).host,
+      },
+      body: req.method !== 'GET' ? JSON.stringify(req.body) : undefined,
+    });
+    
+    // Check content type to determine how to handle response
+    const contentType = response.headers.get('content-type');
+    
+    if (contentType && contentType.includes('application/json')) {
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } else {
+      // For HTML or other content types, send as text
+      const data = await response.text();
+      res.status(response.status).type(contentType || 'text/html').send(data);
+    }
+  } catch (error) {
+    console.error('Proxy error:', error);
+    res.status(500).json({ error: 'Failed to proxy request to external API' });
   }
 });
 
