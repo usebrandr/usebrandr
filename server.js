@@ -37,11 +37,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
-// Health check endpoint for Render
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
-});
-
 // Handle React Router routes - serve index.html for all routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));

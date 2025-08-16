@@ -8,11 +8,10 @@ import MouseGlow from './MouseGlow';
 import OrganicArcs from './OrganicArcs';
 
 interface LandingPageProps {
-  onShowLogin: () => void;
   onNavigate: (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact') => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [waitlistType, setWaitlistType] = useState<'business' | 'influencer'>('business');
   const [activeFeature, setActiveFeature] = useState(0);
@@ -25,6 +24,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
   };
 
   const handleJoinWaitlist = () => {
+    console.log('Join Waitlist clicked, current type:', waitlistType);
     setShowWaitlist(true);
   };
 
@@ -209,7 +209,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
               >
                 FAQs
               </button>
-
             </div>
           </div>
         )}
@@ -246,10 +245,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
                       }`}
                     >
                       <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">
-                        <span className="block sm:hidden">Business</span>
-                        <span className="hidden sm:block">I'm a Business</span>
-                      </span>
+                      <span className="text-sm sm:text-base md:hidden">Business</span>
+                      <span className="hidden md:inline">I'm a Business</span>
                     </button>
                     <button
                       onClick={() => setWaitlistType('influencer')}
@@ -260,10 +257,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
                       }`}
                     >
                       <User className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">
-                        <span className="block sm:hidden">Creator</span>
-                        <span className="hidden sm:block">I'm a Creator</span>
-                      </span>
+                      <span className="text-sm sm:text-base md:hidden">Creator</span>
+                      <span className="hidden md:inline">I'm a Creator</span>
                     </button>
                   </div>
                   <div className="flex justify-center">

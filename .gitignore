@@ -10,12 +10,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build outputs
+dist/
 build/
 *.tgz
 
-# Allow dist for deployment
-!dist/
-dist/node_modules/
+# Allow frontend dist for deployment
+!project/frontend/dist/
 
 # OS generated files
 .DS_Store

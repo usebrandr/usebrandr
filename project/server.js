@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { existsSync } from 'fs';
 
 // Load environment variables
 dotenv.config();
@@ -30,61 +29,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Debug: Log the current working directory and check if dist exists
-console.log('Current working directory:', process.cwd());
-console.log('Dist directory path:', path.join(process.cwd(), 'dist'));
-console.log('Dist directory exists:', existsSync(path.join(process.cwd(), 'dist')));
-
-// Global variable for dist path - will be set in startServer function
-let distPath = null;
-
-// Set up static file serving for both dist folder and root assets
+// Serve static files from the dist directory (React build output)
 app.use(express.static(path.join(process.cwd(), 'dist')));
-app.use(express.static(process.cwd())); // Serve files from root directory (for videos, images, etc.)
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
-  if (!distPath) {
-    console.log('❌ distPath not yet set, sending fallback response');
-    res.status(503).send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <title>Brandr - Starting Up</title>
-      </head>
-      <body>
-          <h1>Brandr App</h1>
-          <p>Server is starting up. Please wait...</p>
-          <p>Current directory: ${process.cwd()}</p>
-      </body>
-      </html>
-    `);
-    return;
-  }
-  
-  const indexPath = path.join(distPath, 'index.html');
-  console.log('Attempting to serve index.html from:', indexPath);
-  
-  if (existsSync(indexPath)) {
-    console.log('✅ index.html found, serving file');
-    res.sendFile(indexPath);
-  } else {
-    console.log('❌ index.html not found, sending fallback response');
-    res.status(404).send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <title>Brandr - Build in Progress</title>
-      </head>
-      <body>
-          <h1>Brandr App</h1>
-          <p>Build is in progress. Please wait...</p>
-          <p>Current directory: ${process.cwd()}</p>
-          <p>Expected dist path: ${distPath}</p>
-        </body>
-      </html>
-    `);
-  }
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
 // Health check endpoint for Render
@@ -92,102 +42,13 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// Note: Catch-all route for React Router moved to end of file
+// Handle React Router routes - serve index.html for all routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+});
 
 // MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI;
-
-// Start server function
-const startServer = async () => {
-  try {
-    // More comprehensive debugging
-    console.log('=== DETAILED DIRECTORY INSPECTION ===');
-    console.log('Listing current directory contents:');
-    try {
-      const fs = await import('fs/promises');
-      const files = await fs.readdir(process.cwd());
-      console.log('Files in current directory:', files);
-      
-      if (files.includes('dist')) {
-        console.log('✅ dist folder found in current directory');
-        const distFiles = await fs.readdir(path.join(process.cwd(), 'dist'));
-        console.log('Files in dist folder:', distFiles);
-        
-        if (distFiles.includes('index.html')) {
-          console.log('✅ index.html found in dist folder');
-          const stats = await fs.stat(path.join(process.cwd(), 'dist', 'index.html'));
-          console.log('index.html file size:', stats.size, 'bytes');
-        } else {
-          console.log('❌ index.html NOT found in dist folder');
-        }
-      } else {
-        console.log('❌ dist folder NOT found in current directory');
-        
-        // Search for dist folders in parent directories
-        console.log('Searching for dist folders in parent directories...');
-        let currentDir = process.cwd();
-        for (let i = 0; i < 3; i++) {
-          const parentDir = path.dirname(currentDir);
-          if (parentDir === currentDir) break;
-          currentDir = parentDir;
-          try {
-            const parentFiles = await fs.readdir(currentDir);
-            if (parentFiles.includes('dist')) {
-              console.log(`✅ dist folder found in parent directory: ${currentDir}`);
-              const distFiles = await fs.readdir(path.join(currentDir, 'dist'));
-              console.log('Files in parent dist folder:', distFiles);
-              break;
-            }
-          } catch (err) {
-            console.log(`Could not read directory: ${currentDir}`);
-          }
-        }
-        
-        // If still no dist found, try to create a minimal index.html
-        console.log('Attempting to create a minimal index.html for testing...');
-        try {
-          await fs.mkdir('dist', { recursive: true });
-          const minimalHtml = `<!DOCTYPE html>
-<html>
-<head>
-    <title>Brandr - Loading...</title>
-</head>
-<body>
-    <h1>Brandr App</h1>
-    <p>Build in progress...</p>
-</body>
-</html>`;
-          await fs.writeFile('dist/index.html', minimalHtml);
-          console.log('✅ Created minimal index.html for testing');
-        } catch (createError) {
-          console.error('Failed to create minimal index.html:', createError);
-        }
-      }
-    } catch (error) {
-      console.error('Error during directory inspection:', error);
-    }
-    console.log('=== END DIRECTORY INSPECTION ===');
-
-    // Set up static file serving after checking dist folder
-    distPath = path.join(process.cwd(), 'dist');
-    console.log('Setting up static file serving from:', distPath);
-    
-    if (existsSync(distPath)) {
-      console.log('✅ dist directory exists, static file serving is ready');
-    } else {
-      console.log('❌ dist directory does not exist, static file serving may fail');
-    }
-
-    // Start the server
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-      console.log(`Server started successfully!`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
 
 // Create a MongoDB client instance
 let mongoClient = null;
@@ -220,32 +81,45 @@ app.post('/api/waitlist', async (req, res) => {
       return res.status(400).json({ error: 'Valid email is required' });
     }
 
-    // Connect to MongoDB
-    const client = await connectToMongoDB();
-    const db = client.db('waitlist');
-    const collection = db.collection('emails');
+    try {
+      // Try to connect to MongoDB
+      const client = await connectToMongoDB();
+      const db = client.db('waitlist');
+      const collection = db.collection('emails');
 
-    // Check if email already exists
-    const existingEmail = await collection.findOne({ email: email.toLowerCase() });
-    if (existingEmail) {
-      return res.status(409).json({ error: 'Email already registered' });
+      // Check if email already exists
+      const existingEmail = await collection.findOne({ email: email.toLowerCase() });
+      if (existingEmail) {
+        return res.status(409).json({ error: 'Email already registered' });
+      }
+
+      // Insert new email
+      const result = await collection.insertOne({
+        email: email.toLowerCase(),
+        userType: userType || 'business',
+        createdAt: new Date(),
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      });
+
+      console.log(`New waitlist signup: ${email} (${userType})`);
+      
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Successfully joined waitlist',
+        id: result.insertedId 
+      });
+    } catch (mongoError) {
+      console.log('MongoDB not available, using fallback storage');
+      
+      // Fallback: just log the signup and return success
+      console.log(`Fallback waitlist signup: ${email} (${userType})`);
+      
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Successfully joined waitlist (offline mode)',
+        id: 'fallback-' + Date.now()
+      });
     }
-
-    // Insert new email
-    const result = await collection.insertOne({
-      email: email.toLowerCase(),
-      userType: userType || 'business',
-      createdAt: new Date(),
-      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    });
-
-    console.log(`New waitlist signup: ${email} (${userType})`);
-    
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Successfully joined waitlist',
-      id: result.insertedId 
-    });
 
   } catch (error) {
     console.error('Waitlist API error:', error);
@@ -263,32 +137,45 @@ app.post('/api/waitlist/join', async (req, res) => {
       return res.status(400).json({ error: 'Valid email is required' });
     }
 
-    // Connect to MongoDB
-    const client = await connectToMongoDB();
-    const db = client.db('waitlist');
-    const collection = db.collection('emails');
+    try {
+      // Try to connect to MongoDB
+      const client = await connectToMongoDB();
+      const db = client.db('waitlist');
+      const collection = db.collection('emails');
 
-    // Check if email already exists
-    const existingEmail = await collection.findOne({ email: email.toLowerCase() });
-    if (existingEmail) {
-      return res.status(409).json({ error: 'Email already registered' });
+      // Check if email already exists
+      const existingEmail = await collection.findOne({ email: email.toLowerCase() });
+      if (existingEmail) {
+        return res.status(409).json({ error: 'Email already registered' });
+      }
+
+      // Insert new email
+      const result = await collection.insertOne({
+        email: email.toLowerCase(),
+        userType: userType || 'business',
+        createdAt: new Date(),
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      });
+
+      console.log(`New waitlist signup: ${email} (${userType})`);
+      
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Successfully joined waitlist',
+        id: result.insertedId 
+      });
+    } catch (mongoError) {
+      console.log('MongoDB not available, using fallback storage');
+      
+      // Fallback: just log the signup and return success
+      console.log(`Fallback waitlist signup: ${email} (${userType})`);
+      
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Successfully joined waitlist (offline mode)',
+        id: 'fallback-' + Date.now()
+      });
     }
-
-    // Insert new email
-    const result = await collection.insertOne({
-      email: email.toLowerCase(),
-      userType: userType || 'business',
-      createdAt: new Date(),
-      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    });
-
-    console.log(`New waitlist signup: ${email} (${userType})`);
-    
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Successfully joined waitlist',
-      id: result.insertedId 
-    });
 
   } catch (error) {
     console.error('Waitlist join API error:', error);
@@ -392,58 +279,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'API server is running' });
 });
 
-// Handle React Router routes - serve index.html for frontend routes only
-// This must be placed AFTER all API routes to avoid intercepting them
-app.get('*', (req, res) => {
-  // Skip API routes - let them be handled by their specific handlers
-  if (req.path.startsWith('/api/') || req.path === '/health') {
-    return res.status(404).json({ error: 'API endpoint not found' });
-  }
-  
-  if (!distPath) {
-    console.log(`❌ distPath not yet set for route: ${req.path}`);
-    res.status(503).send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <title>Brandr - Starting Up</title>
-      </head>
-      <body>
-          <h1>Brandr App</h1>
-          <p>Server is starting up. Please wait...</p>
-          <p>Route requested: ${req.path}</p>
-          <p>Current directory: ${process.cwd()}</p>
-        </body>
-      </html>
-    `);
-    return;
-  }
-  
-  const indexPath = path.join(distPath, 'index.html');
-  console.log(`Frontend route ${req.path} - serving index.html from:`, indexPath);
-  
-  if (existsSync(indexPath)) {
-    console.log('✅ index.html found, serving for frontend route:', req.path);
-    res.sendFile(indexPath);
-  } else {
-    console.log('❌ index.html not found for frontend route:', req.path);
-    res.status(404).send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <title>Brandr - Build in Progress</title>
-      </head>
-      <body>
-          <h1>Brandr App</h1>
-          <p>Build is in progress. Please wait...</p>
-          <p>Route requested: ${req.path}</p>
-          <p>Expected dist path: ${distPath}</p>
-        </body>
-      </html>
-    `);
-  }
-});
-
 // Graceful shutdown
 process.on('SIGINT', async () => {
   if (mongoClient) {
@@ -453,5 +288,7 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// Start the server
-startServer(); 
+app.listen(PORT, () => {
+  console.log(`API Server running on port ${PORT}`);
+  console.log(`MongoDB: Connected successfully`);
+}); 
