@@ -22,6 +22,22 @@ services:
       echo "=== STARTING BUILD ==="
       npm install
       npm run build
+      echo ""
+      echo "=== CHECKING BUILD OUTPUT ==="
+      echo "Listing dist directory contents:"
+      if [ -d "dist" ]; then
+        ls -la dist/
+        echo ""
+        echo "Checking if index.html exists in dist:"
+        if [ -f "dist/index.html" ]; then
+          echo "✅ dist/index.html found"
+        else
+          echo "❌ dist/index.html NOT found"
+        fi
+      else
+        echo "❌ dist directory NOT found"
+      fi
+      echo ""
       echo "=== BUILD COMPLETED ==="
     startCommand: node server.js
     envVars:
