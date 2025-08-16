@@ -35,21 +35,30 @@ console.log('Current working directory:', process.cwd());
 console.log('Dist directory path:', path.join(process.cwd(), 'dist'));
 console.log('Dist directory exists:', existsSync(path.join(process.cwd(), 'dist')));
 
-// Serve static files from the dist directory (React build output)
-const distPath = path.join(process.cwd(), 'dist');
-console.log('Setting up static file serving from:', distPath);
-
-// Check if dist directory exists before setting up static serving
-if (existsSync(distPath)) {
-  console.log('✅ dist directory exists, setting up static file serving');
-  app.use(express.static(distPath));
-} else {
-  console.log('❌ dist directory does not exist, static file serving disabled');
-}
+// Global variable for dist path - will be set in startServer function
+let distPath = null;
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
-  const indexPath = path.join(process.cwd(), 'dist', 'index.html');
+  if (!distPath) {
+    console.log('❌ distPath not yet set, sending fallback response');
+    res.status(503).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Brandr - Starting Up</title>
+      </head>
+      <body>
+          <h1>Brandr App</h1>
+          <p>Server is starting up. Please wait...</p>
+          <p>Current directory: ${process.cwd()}</p>
+      </body>
+      </html>
+    `);
+    return;
+  }
+  
+  const indexPath = path.join(distPath, 'index.html');
   console.log('Attempting to serve index.html from:', indexPath);
   
   if (existsSync(indexPath)) {
@@ -68,7 +77,7 @@ app.get('/', (req, res) => {
           <p>Build is in progress. Please wait...</p>
           <p>Current directory: ${process.cwd()}</p>
           <p>Expected dist path: ${distPath}</p>
-      </body>
+        </body>
       </html>
     `);
   }
@@ -81,7 +90,26 @@ app.get('/api/health', (req, res) => {
 
 // Handle React Router routes - serve index.html for all routes
 app.get('*', (req, res) => {
-  const indexPath = path.join(process.cwd(), 'dist', 'index.html');
+  if (!distPath) {
+    console.log(`❌ distPath not yet set for route: ${req.path}`);
+    res.status(503).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Brandr - Starting Up</title>
+      </head>
+      <body>
+          <h1>Brandr App</h1>
+          <p>Server is starting up. Please wait...</p>
+          <p>Route requested: ${req.path}</p>
+          <p>Current directory: ${process.cwd()}</p>
+        </body>
+      </html>
+    `);
+    return;
+  }
+  
+  const indexPath = path.join(distPath, 'index.html');
   console.log(`Route ${req.path} - attempting to serve index.html from:`, indexPath);
   
   if (existsSync(indexPath)) {
@@ -101,7 +129,7 @@ app.get('*', (req, res) => {
           <p>Route requested: ${req.path}</p>
           <p>Current directory: ${process.cwd()}</p>
           <p>Expected dist path: ${distPath}</p>
-      </body>
+        </body>
       </html>
     `);
   }
@@ -180,6 +208,17 @@ const startServer = async () => {
       console.error('Error during directory inspection:', error);
     }
     console.log('=== END DIRECTORY INSPECTION ===');
+
+    // Set up static file serving after checking dist folder
+    distPath = path.join(process.cwd(), 'dist');
+    console.log('Setting up static file serving from:', distPath);
+    
+    if (existsSync(distPath)) {
+      console.log('✅ dist directory exists, setting up static file serving');
+      app.use(express.static(distPath));
+    } else {
+      console.log('❌ dist directory does not exist, static file serving disabled');
+    }
 
     // Start the server
     app.listen(PORT, () => {
