@@ -38,8 +38,9 @@ console.log('Dist directory exists:', existsSync(path.join(process.cwd(), 'dist'
 // Global variable for dist path - will be set in startServer function
 let distPath = null;
 
-// Set up static file serving - this will be updated in startServer function
+// Set up static file serving for both dist folder and root assets
 app.use(express.static(path.join(process.cwd(), 'dist')));
+app.use(express.static(process.cwd())); // Serve files from root directory (for videos, images, etc.)
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
@@ -91,52 +92,7 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// Handle React Router routes - serve index.html for all routes
-app.get('*', (req, res) => {
-  if (!distPath) {
-    console.log(`❌ distPath not yet set for route: ${req.path}`);
-    res.status(503).send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <title>Brandr - Starting Up</title>
-      </head>
-      <body>
-          <h1>Brandr App</h1>
-          <p>Server is starting up. Please wait...</p>
-          <p>Route requested: ${req.path}</p>
-          <p>Current directory: ${process.cwd()}</p>
-        </body>
-      </html>
-    `);
-    return;
-  }
-  
-  const indexPath = path.join(distPath, 'index.html');
-  console.log(`Route ${req.path} - attempting to serve index.html from:`, indexPath);
-  
-  if (existsSync(indexPath)) {
-    console.log('✅ index.html found, serving file for route:', req.path);
-    res.sendFile(indexPath);
-  } else {
-    console.log('❌ index.html not found for route:', req.path);
-    res.status(404).send(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <title>Brandr - Build in Progress</title>
-      </head>
-      <body>
-          <h1>Brandr App</h1>
-          <p>Build is in progress. Please wait...</p>
-          <p>Route requested: ${req.path}</p>
-          <p>Current directory: ${process.cwd()}</p>
-          <p>Expected dist path: ${distPath}</p>
-        </body>
-      </html>
-    `);
-  }
-});
+// Note: Catch-all route for React Router moved to end of file
 
 // MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -434,6 +390,58 @@ app.get('/api/health', (req, res) => {
 // Health check endpoint for Render
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'API server is running' });
+});
+
+// Handle React Router routes - serve index.html for frontend routes only
+// This must be placed AFTER all API routes to avoid intercepting them
+app.get('*', (req, res) => {
+  // Skip API routes - let them be handled by their specific handlers
+  if (req.path.startsWith('/api/') || req.path === '/health') {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  
+  if (!distPath) {
+    console.log(`❌ distPath not yet set for route: ${req.path}`);
+    res.status(503).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Brandr - Starting Up</title>
+      </head>
+      <body>
+          <h1>Brandr App</h1>
+          <p>Server is starting up. Please wait...</p>
+          <p>Route requested: ${req.path}</p>
+          <p>Current directory: ${process.cwd()}</p>
+        </body>
+      </html>
+    `);
+    return;
+  }
+  
+  const indexPath = path.join(distPath, 'index.html');
+  console.log(`Frontend route ${req.path} - serving index.html from:`, indexPath);
+  
+  if (existsSync(indexPath)) {
+    console.log('✅ index.html found, serving for frontend route:', req.path);
+    res.sendFile(indexPath);
+  } else {
+    console.log('❌ index.html not found for frontend route:', req.path);
+    res.status(404).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Brandr - Build in Progress</title>
+      </head>
+      <body>
+          <h1>Brandr App</h1>
+          <p>Build is in progress. Please wait...</p>
+          <p>Route requested: ${req.path}</p>
+          <p>Expected dist path: ${distPath}</p>
+        </body>
+      </html>
+    `);
+  }
 });
 
 // Graceful shutdown
