@@ -1,8 +1,9 @@
 services:
   - type: web
-    name: usebrandr
+    name: usebrandr-v2
     env: node
     plan: starter
+    region: oregon
 
     buildCommand: |
       echo "=== BUILD DEBUG INFO ==="
