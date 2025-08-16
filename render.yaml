@@ -1,14 +1,24 @@
 services:
-  - type: static
-    name: usebrandr-frontend
+  - type: web
+    name: usebrandr
+    env: node
     plan: starter
-    region: oregon
+    rootDir: project
     buildCommand: |
       echo "=== BUILD DEBUG INFO ==="
       echo "Current working directory: $(pwd)"
-      echo "Parent directory: $(dirname $(pwd))"
       echo "Listing all files in current directory:"
       ls -la
+      echo ""
+      echo "Checking if package.json exists:"
+      if [ -f "package.json" ]; then
+        echo "✅ package.json found in current directory"
+        cat package.json | head -10
+      else
+        echo "❌ package.json NOT found in current directory"
+        echo "Searching for package.json files:"
+        find . -name "package.json" -type f 2>/dev/null
+      fi
       echo ""
       echo "=== STARTING BUILD ==="
       npm install
@@ -28,29 +38,6 @@ services:
       else
         echo "❌ dist directory NOT found"
       fi
-      echo ""
-      echo "=== BUILD COMPLETED ==="
-    staticPublishPath: ./dist
-    envVars:
-      - key: NODE_ENV
-        value: production
-    autoDeploy: true
-    branch: main
-
-  - type: web
-    name: usebrandr-api
-    env: node
-    plan: starter
-    region: oregon
-    buildCommand: |
-      echo "=== BUILD DEBUG INFO ==="
-      echo "Current working directory: $(pwd)"
-      echo "Parent directory: $(dirname $(pwd))"
-      echo "Listing all files in current directory:"
-      ls -la
-      echo ""
-      echo "=== STARTING BUILD ==="
-      npm install
       echo ""
       echo "=== BUILD COMPLETED ==="
     startCommand: node server.js
