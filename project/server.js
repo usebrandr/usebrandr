@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 
 // Load environment variables
 dotenv.config();
@@ -32,7 +33,7 @@ app.use(cors({
 // Debug: Log the current working directory and check if dist exists
 console.log('Current working directory:', process.cwd());
 console.log('Dist directory path:', path.join(process.cwd(), 'dist'));
-console.log('Dist directory exists:', require('fs').existsSync(path.join(process.cwd(), 'dist')));
+console.log('Dist directory exists:', existsSync(path.join(process.cwd(), 'dist')));
 
 // Serve static files from the dist directory (React build output)
 app.use(express.static(path.join(process.cwd(), 'dist')));
