@@ -56,6 +56,68 @@ app.get('*', (req, res) => {
 // MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI;
 
+// Start server function
+const startServer = async () => {
+  try {
+    // More comprehensive debugging
+    console.log('=== DETAILED DIRECTORY INSPECTION ===');
+    console.log('Listing current directory contents:');
+    try {
+      const fs = await import('fs/promises');
+      const files = await fs.readdir(process.cwd());
+      console.log('Files in current directory:', files);
+      
+      if (files.includes('dist')) {
+        console.log('✅ dist folder found in current directory');
+        const distFiles = await fs.readdir(path.join(process.cwd(), 'dist'));
+        console.log('Files in dist folder:', distFiles);
+        
+        if (distFiles.includes('index.html')) {
+          console.log('✅ index.html found in dist folder');
+          const stats = await fs.stat(path.join(process.cwd(), 'dist', 'index.html'));
+          console.log('index.html file size:', stats.size, 'bytes');
+        } else {
+          console.log('❌ index.html NOT found in dist folder');
+        }
+      } else {
+        console.log('❌ dist folder NOT found in current directory');
+        
+        // Search for dist folders in parent directories
+        console.log('Searching for dist folders in parent directories...');
+        let currentDir = process.cwd();
+        for (let i = 0; i < 3; i++) {
+          const parentDir = path.dirname(currentDir);
+          if (parentDir === currentDir) break;
+          currentDir = parentDir;
+          try {
+            const parentFiles = await fs.readdir(currentDir);
+            if (parentFiles.includes('dist')) {
+              console.log(`✅ dist folder found in parent directory: ${currentDir}`);
+              const distFiles = await fs.readdir(path.join(currentDir, 'dist'));
+              console.log('Files in parent dist folder:', distFiles);
+              break;
+            }
+          } catch (err) {
+            console.log(`Could not read directory: ${currentDir}`);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error during directory inspection:', error);
+    }
+    console.log('=== END DIRECTORY INSPECTION ===');
+
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log(`Server started successfully!`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
 // Create a MongoDB client instance
 let mongoClient = null;
 
@@ -268,7 +330,5 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-app.listen(PORT, () => {
-  console.log(`API Server running on port ${PORT}`);
-  console.log(`MongoDB: Connected successfully`);
-}); 
+// Start the server
+startServer(); 
