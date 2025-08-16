@@ -99,7 +99,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin, onSignup }) =
           onLogin(response.data?.user?.user_type as 'business' | 'influencer');
         }, 1000);
       } else {
-        setError(response.error || 'Login failed. Please try again.');
+        setError('Login failed. Please try again.');
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -122,7 +122,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin, onSignup }) =
         username: signupData.username.trim(),
         email: signupData.email.trim(),
         password: signupData.password,
-        confirm_password: signupData.confirmPassword,
         user_type: userType
       });
 
@@ -132,13 +131,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin, onSignup }) =
           onSignup(userType);
         }, 1500);
       } else {
-        if (response.error?.includes('username')) {
-          setError('Username already exists');
-        } else if (response.error?.includes('email')) {
-          setError('Email already exists');
-        } else {
-          setError(response.error || 'Failed to create account. Please try again.');
-        }
+        setError('Failed to create account. Please try again.');
       }
     } catch (err) {
       console.error('Signup error:', err);

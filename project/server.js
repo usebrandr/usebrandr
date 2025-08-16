@@ -38,6 +38,9 @@ console.log('Dist directory exists:', existsSync(path.join(process.cwd(), 'dist'
 // Global variable for dist path - will be set in startServer function
 let distPath = null;
 
+// Set up static file serving - this will be updated in startServer function
+app.use(express.static(path.join(process.cwd(), 'dist')));
+
 // Serve index.html for the root route
 app.get('/', (req, res) => {
   if (!distPath) {
@@ -214,10 +217,9 @@ const startServer = async () => {
     console.log('Setting up static file serving from:', distPath);
     
     if (existsSync(distPath)) {
-      console.log('✅ dist directory exists, setting up static file serving');
-      app.use(express.static(distPath));
+      console.log('✅ dist directory exists, static file serving is ready');
     } else {
-      console.log('❌ dist directory does not exist, static file serving disabled');
+      console.log('❌ dist directory does not exist, static file serving may fail');
     }
 
     // Start the server

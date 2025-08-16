@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { Mail, MapPin, ArrowLeft } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 import BrandrLogo from './BrandrLogo';
 import MouseGlow from './MouseGlow';
 
 interface ContactPageProps {
-  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy') => void;
+  onNavigate: (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact') => void;
 }
 
 const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
