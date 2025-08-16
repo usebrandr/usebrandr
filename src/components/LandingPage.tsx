@@ -172,12 +172,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
         <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
           <button onClick={() => onNavigate('about')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-base lg:text-lg px-3 py-2 rounded-lg hover:bg-white/10">About Us</button>
           <button onClick={() => onNavigate('faqs')} className="text-[#f5f5f5]/80 hover:text-[#f5f5f5] transition-colors font-medium text-base lg:text-lg px-3 py-2 rounded-lg hover:bg-white/10">FAQs</button>
-          <button onClick={onShowLogin} className="px-6 lg:px-10 py-2 lg:py-4 text-base lg:text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">Sign In</button>
         </div>
         
         {/* Mobile Navigation */}
         <div className="md:hidden flex items-center space-x-3">
-          <button onClick={onShowLogin} className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg">Sign In</button>
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
@@ -211,17 +209,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
               >
                 FAQs
               </button>
-              <div className="pt-4 border-t border-white/20">
-                <button 
-                  onClick={() => {
-                    onShowLogin();
-                    setMobileMenuOpen(false);
-                  }} 
-                  className="w-full px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
-                >
-                  Sign In
-                </button>
-              </div>
+
             </div>
           </div>
         )}
@@ -258,7 +246,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
                       }`}
                     >
                       <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">Business</span>
+                      <span className="text-sm sm:text-base">
+                        <span className="block sm:hidden">Business</span>
+                        <span className="hidden sm:block">I'm a Business</span>
+                      </span>
                     </button>
                     <button
                       onClick={() => setWaitlistType('influencer')}
@@ -269,7 +260,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onShowLogin, onNavigate }) =>
                       }`}
                     >
                       <User className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="text-sm sm:text-base">Creator</span>
+                      <span className="text-sm sm:text-base">
+                        <span className="block sm:hidden">Creator</span>
+                        <span className="hidden sm:block">I'm a Creator</span>
+                      </span>
                     </button>
                   </div>
                   <div className="flex justify-center">
