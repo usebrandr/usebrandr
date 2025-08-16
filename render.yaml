@@ -3,6 +3,7 @@ services:
     name: usebrandr
     env: node
     plan: starter
+    rootDir: .
     buildCommand: |
       echo "=== BUILD DEBUG INFO ==="
       echo "Current working directory: $(pwd)"
