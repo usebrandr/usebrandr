@@ -29,6 +29,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Debug: Log the current working directory and check if dist exists
+console.log('Current working directory:', process.cwd());
+console.log('Dist directory path:', path.join(process.cwd(), 'dist'));
+console.log('Dist directory exists:', require('fs').existsSync(path.join(process.cwd(), 'dist')));
+
 // Serve static files from the dist directory (React build output)
 app.use(express.static(path.join(process.cwd(), 'dist')));
 

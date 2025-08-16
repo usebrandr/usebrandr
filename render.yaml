@@ -22,9 +22,15 @@ services:
       echo ""
       echo "=== STARTING BUILD ==="
       npm install
+      echo ""
+      echo "=== RUNNING BUILD ==="
       npm run build
       echo ""
       echo "=== CHECKING BUILD OUTPUT ==="
+      echo "Current directory after build: $(pwd)"
+      echo "Listing current directory contents:"
+      ls -la
+      echo ""
       echo "Listing dist directory contents:"
       if [ -d "dist" ]; then
         ls -la dist/
@@ -32,11 +38,14 @@ services:
         echo "Checking if index.html exists in dist:"
         if [ -f "dist/index.html" ]; then
           echo "✅ dist/index.html found"
+          echo "File size: $(ls -lh dist/index.html | awk '{print $5}')"
         else
           echo "❌ dist/index.html NOT found"
         fi
       else
         echo "❌ dist directory NOT found"
+        echo "Searching for dist directories:"
+        find . -name "dist" -type d 2>/dev/null
       fi
       echo ""
       echo "=== BUILD COMPLETED ==="
@@ -53,42 +62,3 @@ services:
     healthCheckPath: /api/health
     autoDeploy: true
     branch: main
-
-    buildCommand: |
-      echo "=== BUILD DEBUG INFO ==="
-      echo "Current working directory: $(pwd)"
-      echo "Parent directory: $(dirname $(pwd))"
-      echo "Listing all files in current directory:"
-      ls -la
-      echo ""
-      echo "Checking if package.json exists:"
-      if [ -f "package.json" ]; then
-        echo "✅ package.json found in current directory"
-        cat package.json | head -10
-      else
-        echo "❌ package.json NOT found in current directory"
-        echo "Searching for package.json files:"
-        find . -name "package.json" -type f 2>/dev/null
-      fi
-      echo ""
-      echo "=== STARTING BUILD ==="
-      npm install
-      npm run build
-      echo ""
-      echo "=== CHECKING BUILD OUTPUT ==="
-      echo "Listing dist directory contents:"
-      if [ -d "dist" ]; then
-        ls -la dist/
-        echo ""
-        echo "Checking if index.html exists in dist:"
-        if [ -f "dist/index.html" ]; then
-          echo "✅ dist/index.html found"
-        else
-          echo "❌ dist/index.html NOT found"
-        fi
-      else
-        echo "❌ dist directory NOT found"
-      fi
-      echo ""
-      echo "=== BUILD COMPLETED ==="
-    startCommand: node server.js
