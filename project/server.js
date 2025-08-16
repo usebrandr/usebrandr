@@ -36,11 +36,42 @@ console.log('Dist directory path:', path.join(process.cwd(), 'dist'));
 console.log('Dist directory exists:', existsSync(path.join(process.cwd(), 'dist')));
 
 // Serve static files from the dist directory (React build output)
-app.use(express.static(path.join(process.cwd(), 'dist')));
+const distPath = path.join(process.cwd(), 'dist');
+console.log('Setting up static file serving from:', distPath);
+
+// Check if dist directory exists before setting up static serving
+if (existsSync(distPath)) {
+  console.log('✅ dist directory exists, setting up static file serving');
+  app.use(express.static(distPath));
+} else {
+  console.log('❌ dist directory does not exist, static file serving disabled');
+}
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+  const indexPath = path.join(process.cwd(), 'dist', 'index.html');
+  console.log('Attempting to serve index.html from:', indexPath);
+  
+  if (existsSync(indexPath)) {
+    console.log('✅ index.html found, serving file');
+    res.sendFile(indexPath);
+  } else {
+    console.log('❌ index.html not found, sending fallback response');
+    res.status(404).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Brandr - Build in Progress</title>
+      </head>
+      <body>
+          <h1>Brandr App</h1>
+          <p>Build is in progress. Please wait...</p>
+          <p>Current directory: ${process.cwd()}</p>
+          <p>Expected dist path: ${distPath}</p>
+      </body>
+      </html>
+    `);
+  }
 });
 
 // Health check endpoint for Render
@@ -50,7 +81,30 @@ app.get('/api/health', (req, res) => {
 
 // Handle React Router routes - serve index.html for all routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+  const indexPath = path.join(process.cwd(), 'dist', 'index.html');
+  console.log(`Route ${req.path} - attempting to serve index.html from:`, indexPath);
+  
+  if (existsSync(indexPath)) {
+    console.log('✅ index.html found, serving file for route:', req.path);
+    res.sendFile(indexPath);
+  } else {
+    console.log('❌ index.html not found for route:', req.path);
+    res.status(404).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Brandr - Build in Progress</title>
+      </head>
+      <body>
+          <h1>Brandr App</h1>
+          <p>Build is in progress. Please wait...</p>
+          <p>Route requested: ${req.path}</p>
+          <p>Current directory: ${process.cwd()}</p>
+          <p>Expected dist path: ${distPath}</p>
+      </body>
+      </html>
+    `);
+  }
 });
 
 // MongoDB connection with better error handling
@@ -100,6 +154,26 @@ const startServer = async () => {
           } catch (err) {
             console.log(`Could not read directory: ${currentDir}`);
           }
+        }
+        
+        // If still no dist found, try to create a minimal index.html
+        console.log('Attempting to create a minimal index.html for testing...');
+        try {
+          await fs.mkdir('dist', { recursive: true });
+          const minimalHtml = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Brandr - Loading...</title>
+</head>
+<body>
+    <h1>Brandr App</h1>
+    <p>Build in progress...</p>
+</body>
+</html>`;
+          await fs.writeFile('dist/index.html', minimalHtml);
+          console.log('✅ Created minimal index.html for testing');
+        } catch (createError) {
+          console.error('Failed to create minimal index.html:', createError);
         }
       }
     } catch (error) {
