@@ -3,7 +3,6 @@ services:
     name: usebrandr
     env: node
     plan: starter
-    rootDir: project
     buildCommand: |
       echo "=== BUILD DEBUG INFO ==="
       echo "Current working directory: $(pwd)"
@@ -22,6 +21,7 @@ services:
       echo ""
       echo "=== STARTING BUILD ==="
       npm install
+      npm run build
       echo "=== BUILD COMPLETED ==="
     startCommand: node server.js
     envVars:
