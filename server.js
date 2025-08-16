@@ -29,12 +29,17 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Serve static files from the project/frontend/dist directory
-app.use(express.static(path.join(process.cwd(), 'project', 'frontend', 'dist')));
+// Serve static files from the dist directory (React build output)
+app.use(express.static(path.join(process.cwd(), 'dist')));
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'project', 'frontend', 'dist', 'index.html'));
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+});
+
+// Handle React Router routes - serve index.html for all routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
 // MongoDB connection with better error handling
