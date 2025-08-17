@@ -72,16 +72,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Ensure assets are served with correct MIME types
-app.get('/assets/*', (req, res, next) => {
-  const filePath = req.path;
-  if (filePath.endsWith('.js')) {
-    res.setHeader('Content-Type', 'application/javascript');
-  } else if (filePath.endsWith('.css')) {
-    res.setHeader('Content-Type', 'text/css');
-  }
-  next();
-});
+// Remove custom asset route - let Express handle it with proper MIME types
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
@@ -368,8 +359,14 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'API server is running' });
 });
 
-// Handle React Router routes - serve index.html for all non-API routes
+// Handle React Router routes - serve index.html for all non-API, non-asset routes
 app.get('*', (req, res) => {
+  // Don't serve index.html for asset requests
+  if (req.path.startsWith('/assets/')) {
+    return res.status(404).json({ error: 'Asset not found' });
+  }
+  
+  // Serve index.html for all other routes (React Router)
   res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
