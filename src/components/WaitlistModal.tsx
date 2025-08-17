@@ -38,7 +38,18 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
         }),
       });
 
-      const data = await response.json();
+      // Check if response has content before trying to parse JSON
+      const contentType = response.headers.get('content-type');
+      let data = null;
+      
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          console.warn('Failed to parse JSON response:', jsonError);
+          data = null;
+        }
+      }
 
       if (response.ok) {
         setIsSubmitted(true);
@@ -52,11 +63,16 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ onClose, userType }) => {
         } else if (response.status === 429) {
           setError('Too many requests. Please try again later.');
         } else {
-          setError(data.error || 'Failed to join waitlist. Please try again.');
+          setError(data?.error || 'Failed to join waitlist. Please try again.');
         }
       }
     } catch (err) {
       console.error('Waitlist signup error:', err);
+      
+      // Check if it's a network/connection error (no backend server)
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        console.log('No backend server detected - showing demo success message');
+      }
       
       // For now, show success message even if API fails (for demo purposes)
       // In production, you'd want to handle this differently

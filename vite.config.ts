@@ -6,6 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5174,
+    // Commented out proxy for frontend-only demo
+    // Uncomment when you have a backend server running on port 3001
+    /*
     proxy: {
       // Proxy API calls to your existing backend
       '/api': {
@@ -20,6 +23,7 @@ export default defineConfig({
         secure: false,
       }
     }
+    */
   },
   build: {
     outDir: 'dist',
