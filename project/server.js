@@ -106,6 +106,22 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Create a MongoDB client instance
 let mongoClient = null;
 let isMongoConnected = false;
+// Test MongoDB connection function
+const testMongoConnection = async () => {
+  try {
+    if (MONGODB_URI) {
+      const client = await connectToMongoDB();
+      await client.db('waitlist').command({ ping: 1 });
+      isMongoConnected = true;
+      console.log('✅ MongoDB connection test successful');
+    } else {
+      console.log('⚠️  MongoDB URI not configured');
+    }
+  } catch (error) {
+    console.error('❌ MongoDB connection test failed:', error);
+    isMongoConnected = false;
+  }
+};
 
 const connectToMongoDB = async () => {
   try {
@@ -132,19 +148,7 @@ const connectToMongoDB = async () => {
   }
 };
 
-// Test MongoDB connection on startup
-const testMongoConnection = async () => {
-  try {
-    if (MONGODB_URI) {
-      await connectToMongoDB();
-      console.log('✅ MongoDB connection test successful');
-    } else {
-      console.log('⚠️  MONGODB_URI not set - running in offline mode');
-    }
-  } catch (error) {
-    console.log('⚠️  MongoDB connection failed - running in offline mode');
-  }
-};
+
 
 // API Routes
 app.post('/api/waitlist', async (req, res) => {
@@ -376,7 +380,7 @@ app.get('/health', (req, res) => {
 // Handle React Router routes - serve index.html for all non-API, non-asset routes
 app.get('*', (req, res) => {
   // Don't serve index.html for asset requests or API routes
-  if (req.path.startsWith('/assets/') || req.path.startsWith('/api/')) {
+  if (req.path.startsWith('/api/')) {
     return res.status(404).json({ error: 'Route not found' });
   }
   
@@ -397,12 +401,17 @@ process.on('SIGINT', async () => {
 app.listen(PORT, async () => {
   console.log(`🚀 API Server running on port ${PORT}`);
   
-  // Test MongoDB connection on startup
-  await testMongoConnection();
-  
-  if (isMongoConnected) {
-    console.log(`✅ MongoDB: Connected successfully`);
-  } else {
-    console.log(`⚠️  MongoDB: Running in offline mode`);
+  try {
+    // Test MongoDB connection on startup
+    await testMongoConnection();
+    
+    if (isMongoConnected) {
+      console.log(`✅ MongoDB: Connected successfully`);
+    } else {
+      console.log(`⚠️  MongoDB: Running in offline mode`);
+    }
+  } catch (error) {
+    console.error('❌ Server startup error:', error);
+    console.log(`⚠️  Server running without MongoDB connection`);
   }
 }); 
