@@ -9,6 +9,7 @@
     "postbuild": "echo 'Build verification:' && ls -la dist/ && echo 'Assets:' && ls -la dist/assets/ || echo 'No assets folder'",
     "debug": "node debug-build.js",
     "debug:deploy": "node debug-deployment.js",
+    "test:assets": "node test-assets.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "server": "node server.js",
