@@ -30,7 +30,7 @@ app.use(cors({
 }));
 
 // Serve static files from the dist directory (React build output)
-app.use(express.static(path.join(process.cwd(), 'dist'), {
+app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets'), {
   setHeaders: (res, path) => {
     if (path.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
@@ -38,6 +38,27 @@ app.use(express.static(path.join(process.cwd(), 'dist'), {
       res.setHeader('Content-Type', 'text/css');
     } else if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.jpeg') || path.endsWith('.gif') || path.endsWith('.webp')) {
       res.setHeader('Content-Type', 'image/' + path.split('.').pop());
+    }
+  }
+}));
+
+// Serve images and media files from the project root
+app.use(express.static(process.cwd(), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (path.endsWith('.gif')) {
+      res.setHeader('Content-Type', 'image/gif');
+    } else if (path.endsWith('.webp')) {
+      res.setHeader('Content-Type', 'image/webp');
+    } else if (path.endsWith('.svg')) {
+      res.setHeader('Content-Type', 'image/svg+xml');
+    } else if (path.endsWith('.mp4')) {
+      res.setHeader('Content-Type', 'video/mp4');
+    } else if (path.endsWith('.mov')) {
+      res.setHeader('Content-Type', 'video/quicktime');
     }
   }
 }));
