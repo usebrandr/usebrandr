@@ -10,18 +10,15 @@ services:
       echo "Listing all files in current directory:"
       ls -la
       echo ""
-      echo "Checking if package.json exists:"
-      if [ -f "package.json" ]; then
-        echo "✅ package.json found in current directory"
-        cat package.json | head -10
-      else
-        echo "❌ package.json NOT found in current directory"
-        echo "Searching for package.json files:"
-        find . -name "package.json" -type f 2>/dev/null
-      fi
-      echo ""
-      echo "=== STARTING BUILD ==="
+      echo "Installing dependencies..."
       npm install
+      echo ""
+      echo "Building React frontend..."
+      npm run build
+      echo ""
+      echo "Build completed. Contents of dist folder:"
+      ls -la dist/
+      echo ""
       echo "=== BUILD COMPLETED ==="
     startCommand: node server.js
     envVars:
