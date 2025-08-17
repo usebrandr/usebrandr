@@ -59,6 +59,9 @@ if (!assetsPath) {
   assetsPath = path.join(__dirname, 'dist', 'assets');
 }
 
+console.log(`🎯 Final assetsPath set to: ${assetsPath}`);
+console.log(`🎯 This means assets will be served from: ${assetsPath}`);
+
 // Serve assets from the found directory
 app.use('/assets', express.static(assetsPath, {
   setHeaders: (res, filePath) => {
@@ -88,37 +91,7 @@ app.use('/', express.static(assetsPath, {
   }
 }));
 
-// Special route for CSS files that might be requested directly (like index-4418f37c.css)
-app.get('*.css', (req, res) => {
-  const cssFileName = req.path.substring(1); // Remove leading slash
-  
-  // Try multiple possible locations for the CSS file
-  const possibleCssPaths = [
-    path.join(assetsPath, cssFileName),
-    path.join(__dirname, 'dist', 'assets', cssFileName),
-    path.join(__dirname, '..', 'dist', 'assets', cssFileName),
-    path.join(__dirname, '..', '..', 'dist', 'assets', cssFileName),
-    path.join(process.cwd(), 'dist', 'assets', cssFileName)
-  ];
-  
-  let cssPath = null;
-  for (const pathCandidate of possibleCssPaths) {
-    if (fs.existsSync(pathCandidate)) {
-      cssPath = pathCandidate;
-      break;
-    }
-  }
-  
-  if (cssPath) {
-    console.log(`🎨 Serving CSS file: ${cssFileName} from ${cssPath}`);
-    res.setHeader('Content-Type', 'text/css');
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-    res.sendFile(cssPath);
-  } else {
-    console.log(`❌ CSS file not found: ${cssFileName}. Checked paths:`, possibleCssPaths);
-    res.status(404).json({ error: 'CSS file not found', file: cssFileName, checkedPaths: possibleCssPaths });
-  }
-});
+
 
 // Special route for JavaScript files that might be requested directly
 app.get('*.js', (req, res) => {
@@ -152,6 +125,55 @@ app.get('*.js', (req, res) => {
   }
 });
 
+// Special route for assets that are requested with "assets/" prefix
+app.get('assets/*', (req, res) => {
+  const assetFileName = req.path.replace('/assets/', '');
+  
+  // Try multiple possible locations for the asset file
+  const possibleAssetPaths = [
+    path.join(assetsPath, assetFileName),
+    path.join(__dirname, 'dist', 'assets', assetFileName),
+    path.join(__dirname, '..', 'dist', 'assets', assetFileName),
+    path.join(__dirname, '..', '..', 'dist', 'assets', assetFileName),
+    path.join(process.cwd(), 'dist', 'assets', assetFileName)
+  ];
+  
+  let assetPath = null;
+  for (const pathCandidate of possibleAssetPaths) {
+    if (fs.existsSync(pathCandidate)) {
+      assetPath = pathCandidate;
+      break;
+    }
+  }
+  
+  if (assetPath) {
+    console.log(`🎯 Serving asset file: ${assetFileName} from ${assetPath}`);
+    
+    // Set appropriate headers based on file type
+    if (assetFileName.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (assetFileName.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (assetFileName.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    } else if (assetFileName.endsWith('.jpg') || assetFileName.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    } else if (assetFileName.endsWith('.gif')) {
+      res.setHeader('Content-Type', 'image/gif');
+    } else if (assetFileName.endsWith('.webp')) {
+      res.setHeader('Content-Type', 'image/webp');
+    } else if (assetFileName.endsWith('.svg')) {
+      res.setHeader('Content-Type', 'image/svg+xml');
+    }
+    
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.sendFile(assetPath);
+  } else {
+    console.log(`❌ Asset file not found: ${assetFileName}. Checked paths:`, possibleAssetPaths);
+    res.status(404).json({ error: 'Asset file not found', file: assetFileName, checkedPaths: possibleAssetPaths });
+  }
+});
+
 // Add error handling for asset requests
 app.use('/assets', (req, res, next) => {
   const assetPath = path.join(assetsPath, req.path.replace('/assets/', ''));
@@ -173,7 +195,15 @@ app.get('*', (req, res, next) => {
   const isAssetFile = /\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|ttf|eot)$/i.test(req.path);
   
   if (isAssetFile) {
-    const fileName = req.path.substring(1); // Remove leading slash
+    let fileName = req.path.substring(1); // Remove leading slash
+    
+    console.log(`🎯 Asset request detected: ${req.path} -> fileName: ${fileName}`);
+    
+    // Handle "assets/" prefix - if the path starts with "assets/", remove it
+    if (fileName.startsWith('assets/')) {
+      fileName = fileName.replace('assets/', '');
+      console.log(`🔄 Removed 'assets/' prefix, looking for: ${fileName}`);
+    }
     
     // Try multiple possible locations for the asset file
     const possibleAssetPaths = [

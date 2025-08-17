@@ -10,6 +10,7 @@
     "debug": "node debug-build.js",
     "debug:deploy": "node debug-deployment.js",
     "test:assets": "node test-assets.js",
+    "test:paths": "node test-asset-paths.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "server": "node server.js",
