@@ -29,7 +29,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Serve static files from the dist directory (React build output)
+// Serve static files from the dist directory (React build output) - MUST come first
 app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets'), {
   setHeaders: (res, path) => {
     if (path.endsWith('.js')) {
@@ -42,7 +42,7 @@ app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets'), {
   }
 }));
 
-// Serve images and media files from the project root (excluding index.html)
+// Serve images and media files from the project root (excluding index.html and assets)
 app.use(express.static(process.cwd(), {
   index: false, // Don't serve index.html automatically
   setHeaders: (res, path) => {
@@ -68,6 +68,17 @@ app.use(express.static(process.cwd(), {
 app.use((req, res, next) => {
   if (req.path.startsWith('/assets/')) {
     console.log(`📁 Static file request: ${req.path}`);
+  }
+  next();
+});
+
+// Ensure assets are served with correct MIME types
+app.get('/assets/*', (req, res, next) => {
+  const filePath = req.path;
+  if (filePath.endsWith('.js')) {
+    res.setHeader('Content-Type', 'application/javascript');
+  } else if (filePath.endsWith('.css')) {
+    res.setHeader('Content-Type', 'text/css');
   }
   next();
 });
