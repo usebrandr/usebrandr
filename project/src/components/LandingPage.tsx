@@ -8,12 +8,7 @@ import MouseGlow from './MouseGlow';
 import OrganicArcs from './OrganicArcs';
 
 // Import images from public folder
-import analysingImage from '/analysing.png';
-import smartMatchImage from '/smart-match.png';
-import startCampaignImage from '/start-campaign.png';
-import liveMetricsImage from '/live-metrics.png';
-import videoThumbnailImage from '/video-thumbnail.jpg';
-import productDemoVideo from '../../Product Demo.mp4';
+
 
 interface LandingPageProps {
   onNavigate: (page: 'landing' | 'about' | 'faqs' | 'terms' | 'privacy' | 'contact') => void;
@@ -95,28 +90,28 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
       description: "Our AI analyzes your website, social media, and content to extract your brand's unique tone, audience, values, and visual energy.",
       icon: Sparkles,
       color: "blue",
-      image: analysingImage
+              image: '/analysing.png'
     },
     {
       title: "Smart Creator Matching",
       description: "Find creators who match your brand's style, not just demographics. No more bad-fit partnerships.",
       icon: UsersIcon,
       color: "green",
-      image: smartMatchImage
+              image: '/smart-match.png'
     },
     {
       title: "Instant Campaign Launch",
       description: "Launch campaigns in minutes, not weeks. No agencies, no DMs, no spreadsheets — just results.",
       icon: Rocket,
       color: "purple",
-      image: startCampaignImage
+              image: '/start-campaign.png'
     },
     {
       title: "Performance Dashboard",
       description: "Track real-time results, ROI, and campaign performance. See exactly what's working and what's not.",
       icon: BarChart3,
       color: "orange",
-      image: liveMetricsImage
+              image: '/live-metrics.png'
     }
   ];
 
@@ -289,7 +284,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <div className="relative group border-2 border-white/20 rounded-2xl sm:rounded-3xl p-1 sm:p-2">
                 <video 
                   className="w-full h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] object-cover rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl"
-                  poster={videoThumbnailImage}
+                  poster="/video-thumbnail.jpg"
                   onClick={(e) => {
                     const video = e.currentTarget as HTMLVideoElement;
                     if (video.paused) {
@@ -299,7 +294,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                     }
                   }}
                 >
-                  <source src={productDemoVideo} type="video/mp4" />
+                  <source src="/product-demo.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               
