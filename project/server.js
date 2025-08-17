@@ -4,6 +4,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import fs from 'fs'; // Added for file system operations
 
 // Load environment variables
@@ -31,7 +35,7 @@ app.use(cors({
 }));
 
 // Serve static assets from the dist directory FIRST - this is critical
-app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets'), {
+app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets'), {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
@@ -48,7 +52,7 @@ app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets'), {
 
 // Add error handling for asset requests
 app.use('/assets', (req, res, next) => {
-  const assetPath = path.join(process.cwd(), 'dist', 'assets', req.path.replace('/assets/', ''));
+  const assetPath = path.join(__dirname, 'dist', 'assets', req.path.replace('/assets/', ''));
   if (!fs.existsSync(assetPath)) {
     console.error(`❌ Asset not found: ${req.path} -> ${assetPath}`);
     return res.status(404).json({ error: 'Asset not found', path: req.path });
@@ -57,7 +61,7 @@ app.use('/assets', (req, res, next) => {
 });
 
 // Serve other static files from project root (excluding index.html and assets)
-app.use(express.static(process.cwd(), {
+app.use(express.static(__dirname, {
   index: false, // Don't serve index.html automatically
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.png')) {
@@ -88,10 +92,10 @@ app.use((req, res, next) => {
 
 // Remove custom asset route - let Express handle it with proper MIME types
 
-// Serve index.html for the root route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-});
+  // Serve index.html for the root route
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
 
 // Health check endpoint for Render
 app.get('/api/health', (req, res) => {
@@ -386,7 +390,7 @@ app.get('*', (req, res) => {
   
   // Serve index.html for all other routes (React Router)
   console.log(`📄 Serving index.html for route: ${req.path}`);
-  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Graceful shutdown
