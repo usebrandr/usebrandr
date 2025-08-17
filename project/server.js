@@ -52,22 +52,44 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 // Create a MongoDB client instance
 let mongoClient = null;
+let isMongoConnected = false;
 
 const connectToMongoDB = async () => {
   try {
+    if (!MONGODB_URI) {
+      throw new Error('MONGODB_URI environment variable is not set');
+    }
+
     if (!mongoClient) {
+      console.log('Attempting to connect to MongoDB...');
       mongoClient = new MongoClient(MONGODB_URI, {
-        serverSelectionTimeoutMS: 5000,
-        connectTimeoutMS: 10000,
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 15000,
         socketTimeoutMS: 45000,
       });
       await mongoClient.connect();
-      console.log('Connected to MongoDB successfully');
+      isMongoConnected = true;
+      console.log('✅ Connected to MongoDB successfully');
     }
     return mongoClient;
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    isMongoConnected = false;
+    console.error('❌ MongoDB connection error:', error.message);
     throw error;
+  }
+};
+
+// Test MongoDB connection on startup
+const testMongoConnection = async () => {
+  try {
+    if (MONGODB_URI) {
+      await connectToMongoDB();
+      console.log('✅ MongoDB connection test successful');
+    } else {
+      console.log('⚠️  MONGODB_URI not set - running in offline mode');
+    }
+  } catch (error) {
+    console.log('⚠️  MongoDB connection failed - running in offline mode');
   }
 };
 
@@ -117,7 +139,8 @@ app.post('/api/waitlist', async (req, res) => {
       return res.status(200).json({ 
         success: true, 
         message: 'Successfully joined waitlist (offline mode)',
-        id: 'fallback-' + Date.now()
+        id: 'fallback-' + Date.now(),
+        note: 'Data stored locally - MongoDB connection not available'
       });
     }
 
@@ -173,7 +196,8 @@ app.post('/api/waitlist/join', async (req, res) => {
       return res.status(200).json({ 
         success: true, 
         message: 'Successfully joined waitlist (offline mode)',
-        id: 'fallback-' + Date.now()
+        id: 'fallback-' + Date.now(),
+        note: 'Data stored locally - MongoDB connection not available'
       });
     }
 
@@ -185,17 +209,34 @@ app.post('/api/waitlist/join', async (req, res) => {
 
 app.get('/api/status', async (req, res) => {
   try {
-    // Connect to MongoDB
+    if (!MONGODB_URI) {
+      return res.status(200).json({ 
+        status: 'offline',
+        message: 'MongoDB URI not configured',
+        timestamp: new Date().toISOString(),
+        note: 'Set MONGODB_URI environment variable to enable database storage'
+      });
+    }
+
+    if (!isMongoConnected) {
+      return res.status(200).json({ 
+        status: 'offline',
+        message: 'MongoDB connection failed',
+        timestamp: new Date().toISOString(),
+        note: 'Check your MongoDB connection string and network access'
+      });
+    }
+
+    // Test connection with ping
     const client = await connectToMongoDB();
     const db = client.db('waitlist');
-    
-    // Test connection with ping
     await db.command({ ping: 1 });
 
     return res.status(200).json({ 
-      status: 'ok',
+      status: 'connected',
       message: 'MongoDB connection successful',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      database: 'waitlist'
     });
 
   } catch (error) {
@@ -288,7 +329,15 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-app.listen(PORT, () => {
-  console.log(`API Server running on port ${PORT}`);
-  console.log(`MongoDB: Connected successfully`);
+app.listen(PORT, async () => {
+  console.log(`🚀 API Server running on port ${PORT}`);
+  
+  // Test MongoDB connection on startup
+  await testMongoConnection();
+  
+  if (isMongoConnected) {
+    console.log(`✅ MongoDB: Connected successfully`);
+  } else {
+    console.log(`⚠️  MongoDB: Running in offline mode`);
+  }
 }); 
