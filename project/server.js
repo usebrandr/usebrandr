@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs'; // Added for file system operations
 
 // Load environment variables
 dotenv.config();
@@ -29,36 +30,49 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Serve static files from the dist directory (React build output) - MUST come first
+// Serve static assets from the dist directory FIRST - this is critical
 app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets'), {
-  setHeaders: (res, path) => {
-    if (path.endsWith('.js')) {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
-    } else if (path.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache for JS
+    } else if (filePath.endsWith('.css')) {
       res.setHeader('Content-Type', 'text/css');
-    } else if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.jpeg') || path.endsWith('.gif') || path.endsWith('.webp')) {
-      res.setHeader('Content-Type', 'image/' + path.split('.').pop());
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache for CSS
+    } else if (filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.jpeg') || filePath.endsWith('.gif') || filePath.endsWith('.webp')) {
+      res.setHeader('Content-Type', 'image/' + filePath.split('.').pop());
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 year cache for images
     }
   }
 }));
 
-// Serve images and media files from the project root (excluding index.html and assets)
+// Add error handling for asset requests
+app.use('/assets', (req, res, next) => {
+  const assetPath = path.join(process.cwd(), 'dist', 'assets', req.path.replace('/assets/', ''));
+  if (!fs.existsSync(assetPath)) {
+    console.error(`❌ Asset not found: ${req.path} -> ${assetPath}`);
+    return res.status(404).json({ error: 'Asset not found', path: req.path });
+  }
+  next();
+});
+
+// Serve other static files from project root (excluding index.html and assets)
 app.use(express.static(process.cwd(), {
   index: false, // Don't serve index.html automatically
-  setHeaders: (res, path) => {
-    if (path.endsWith('.png')) {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.png')) {
       res.setHeader('Content-Type', 'image/png');
-    } else if (path.endsWith('.jpg') || path.endsWith('.jpeg')) {
+    } else if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
       res.setHeader('Content-Type', 'image/jpeg');
-    } else if (path.endsWith('.gif')) {
+    } else if (filePath.endsWith('.gif')) {
       res.setHeader('Content-Type', 'image/gif');
-    } else if (path.endsWith('.webp')) {
+    } else if (filePath.endsWith('.webp')) {
       res.setHeader('Content-Type', 'image/webp');
-    } else if (path.endsWith('.svg')) {
+    } else if (filePath.endsWith('.svg')) {
       res.setHeader('Content-Type', 'image/svg+xml');
-    } else if (path.endsWith('.mp4')) {
+    } else if (filePath.endsWith('.mp4')) {
       res.setHeader('Content-Type', 'video/mp4');
-    } else if (path.endsWith('.mov')) {
+    } else if (filePath.endsWith('.mov')) {
       res.setHeader('Content-Type', 'video/quicktime');
     }
   }
@@ -361,12 +375,13 @@ app.get('/health', (req, res) => {
 
 // Handle React Router routes - serve index.html for all non-API, non-asset routes
 app.get('*', (req, res) => {
-  // Don't serve index.html for asset requests
-  if (req.path.startsWith('/assets/')) {
-    return res.status(404).json({ error: 'Asset not found' });
+  // Don't serve index.html for asset requests or API routes
+  if (req.path.startsWith('/assets/') || req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Route not found' });
   }
   
   // Serve index.html for all other routes (React Router)
+  console.log(`📄 Serving index.html for route: ${req.path}`);
   res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 

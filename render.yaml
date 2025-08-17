@@ -19,6 +19,12 @@ services:
       echo "Build completed. Contents of dist folder:"
       ls -la dist/
       echo ""
+      echo "Contents of dist/assets folder:"
+      ls -la dist/assets/ || echo "dist/assets folder not found"
+      echo ""
+      echo "Checking for index.html:"
+      ls -la dist/index.html || echo "index.html not found"
+      echo ""
       echo "=== BUILD COMPLETED ==="
     startCommand: node server.js
     envVars:
