@@ -42,10 +42,7 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// Handle React Router routes - serve index.html for all routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-});
+// This will be moved to the end after all API routes
 
 // MongoDB connection with better error handling
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -318,6 +315,11 @@ app.get('/api/health', (req, res) => {
 // Health check endpoint for Render
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'API server is running' });
+});
+
+// Handle React Router routes - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
 // Graceful shutdown
