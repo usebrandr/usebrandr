@@ -7,12 +7,12 @@ import MondayBackground from './MondayBackground';
 import MouseGlow from './MouseGlow';
 import OrganicArcs from './OrganicArcs';
 
-// Import images
-import analysingImage from '../../analysing.png';
-import smartMatchImage from '../../smart-match.png';
-import startCampaignImage from '../../start-campaign.png';
-import liveMetricsImage from '../../live-metrics.png';
-import videoThumbnailImage from '../../video-thumbnail.jpg';
+// Import images from public folder
+import analysingImage from '/analysing.png';
+import smartMatchImage from '/smart-match.png';
+import startCampaignImage from '/start-campaign.png';
+import liveMetricsImage from '/live-metrics.png';
+import videoThumbnailImage from '/video-thumbnail.jpg';
 import productDemoVideo from '../../Product Demo.mp4';
 
 interface LandingPageProps {
