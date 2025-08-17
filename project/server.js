@@ -35,7 +35,32 @@ app.use(cors({
 }));
 
 // Serve static assets from the dist directory FIRST - this is critical
-app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets'), {
+// Try multiple possible build output locations for Render deployment
+const possibleAssetPaths = [
+  path.join(__dirname, 'dist', 'assets'),
+  path.join(__dirname, '..', 'dist', 'assets'),
+  path.join(__dirname, '..', '..', 'dist', 'assets'),
+  path.join(process.cwd(), 'dist', 'assets')
+];
+
+// Find the first valid assets directory
+let assetsPath = null;
+for (const assetPath of possibleAssetPaths) {
+  if (fs.existsSync(assetPath)) {
+    assetsPath = assetPath;
+    console.log(`✅ Found assets directory: ${assetsPath}`);
+    break;
+  }
+}
+
+if (!assetsPath) {
+  console.warn('⚠️  No assets directory found in common locations. Build may have failed or assets are in unexpected location.');
+  // Fallback to the original path
+  assetsPath = path.join(__dirname, 'dist', 'assets');
+}
+
+// Serve assets from the found directory
+app.use('/assets', express.static(assetsPath, {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.js')) {
       res.setHeader('Content-Type', 'application/javascript');
@@ -50,9 +75,54 @@ app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets'), {
   }
 }));
 
+// Also serve assets from root path as fallback (some builds might put assets in root)
+app.use('/', express.static(assetsPath, {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
+    } else if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
+    }
+  }
+}));
+
+// Special route for CSS files that might be requested directly (like index-4418f37c.css)
+app.get('*.css', (req, res) => {
+  const cssFileName = req.path.substring(1); // Remove leading slash
+  const cssPath = path.join(assetsPath, cssFileName);
+  
+  if (fs.existsSync(cssPath)) {
+    console.log(`🎨 Serving CSS file: ${cssFileName} from ${cssPath}`);
+    res.setHeader('Content-Type', 'text/css');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.sendFile(cssPath);
+  } else {
+    console.log(`❌ CSS file not found: ${cssFileName} at ${cssPath}`);
+    res.status(404).json({ error: 'CSS file not found', file: cssFileName });
+  }
+});
+
+// Special route for JavaScript files that might be requested directly
+app.get('*.js', (req, res) => {
+  const jsFileName = req.path.substring(1); // Remove leading slash
+  const jsPath = path.join(assetsPath, jsFileName);
+  
+  if (fs.existsSync(jsPath)) {
+    console.log(`📜 Serving JS file: ${jsFileName} from ${jsPath}`);
+    res.setHeader('Content-Type', 'application/javascript');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.sendFile(jsPath);
+  } else {
+    console.log(`❌ JS file not found: ${jsFileName} at ${jsPath}`);
+    res.status(404).json({ error: 'JavaScript file not found', file: jsFileName });
+  }
+});
+
 // Add error handling for asset requests
 app.use('/assets', (req, res, next) => {
-  const assetPath = path.join(__dirname, 'dist', 'assets', req.path.replace('/assets/', ''));
+  const assetPath = path.join(assetsPath, req.path.replace('/assets/', ''));
   if (!fs.existsSync(assetPath)) {
     console.error(`❌ Asset not found: ${req.path} -> ${assetPath}`);
     return res.status(404).json({ error: 'Asset not found', path: req.path });
@@ -94,7 +164,29 @@ app.use((req, res, next) => {
 
   // Serve index.html for the root route
   app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    // Try multiple possible locations for index.html
+    const possibleIndexPaths = [
+      path.join(__dirname, 'dist', 'index.html'),
+      path.join(__dirname, '..', 'dist', 'index.html'),
+      path.join(__dirname, '..', '..', 'dist', 'index.html'),
+      path.join(process.cwd(), 'dist', 'index.html')
+    ];
+    
+    let indexPath = null;
+    for (const indexPathCandidate of possibleIndexPaths) {
+      if (fs.existsSync(indexPathCandidate)) {
+        indexPath = indexPathCandidate;
+        break;
+      }
+    }
+    
+    if (!indexPath) {
+      console.error('❌ index.html not found in any expected location');
+      return res.status(500).json({ error: 'Build files not found' });
+    }
+    
+    console.log(`📄 Serving index.html for root route from: ${indexPath}`);
+    res.sendFile(indexPath);
   });
 
 // Health check endpoint for Render
@@ -388,9 +480,30 @@ app.get('*', (req, res) => {
     return res.status(404).json({ error: 'Route not found' });
   }
   
+  // Try multiple possible locations for index.html
+  const possibleIndexPaths = [
+    path.join(__dirname, 'dist', 'index.html'),
+    path.join(__dirname, '..', 'dist', 'index.html'),
+    path.join(__dirname, '..', '..', 'dist', 'index.html'),
+    path.join(process.cwd(), 'dist', 'index.html')
+  ];
+  
+  let indexPath = null;
+  for (const indexPathCandidate of possibleIndexPaths) {
+    if (fs.existsSync(indexPathCandidate)) {
+      indexPath = indexPathCandidate;
+      break;
+    }
+  }
+  
+  if (!indexPath) {
+    console.error('❌ index.html not found in any expected location');
+    return res.status(500).json({ error: 'Build files not found' });
+  }
+  
   // Serve index.html for all other routes (React Router)
-  console.log(`📄 Serving index.html for route: ${req.path}`);
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  console.log(`📄 Serving index.html for route: ${req.path} from: ${indexPath}`);
+  res.sendFile(indexPath);
 });
 
 // Graceful shutdown
@@ -404,6 +517,36 @@ process.on('SIGINT', async () => {
 
 app.listen(PORT, async () => {
   console.log(`🚀 API Server running on port ${PORT}`);
+  console.log(`📁 Current working directory: ${process.cwd()}`);
+  console.log(`📁 __dirname: ${__dirname}`);
+  
+  // Log available build directories for debugging
+  const possibleBuildPaths = [
+    path.join(__dirname, 'dist'),
+    path.join(__dirname, '..', 'dist'),
+    path.join(__dirname, '..', '..', 'dist'),
+    path.join(process.cwd(), 'dist')
+  ];
+  
+  console.log('🔍 Checking for build directories:');
+  for (const buildPath of possibleBuildPaths) {
+    if (fs.existsSync(buildPath)) {
+      console.log(`✅ Found build directory: ${buildPath}`);
+      try {
+        const files = fs.readdirSync(buildPath);
+        console.log(`   Contents: ${files.join(', ')}`);
+        
+        if (fs.existsSync(path.join(buildPath, 'assets'))) {
+          const assetFiles = fs.readdirSync(path.join(buildPath, 'assets'));
+          console.log(`   Assets: ${assetFiles.join(', ')}`);
+        }
+      } catch (error) {
+        console.log(`   Error reading directory: ${error.message}`);
+      }
+    } else {
+      console.log(`❌ Not found: ${buildPath}`);
+    }
+  }
   
   try {
     // Test MongoDB connection on startup
