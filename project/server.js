@@ -42,8 +42,9 @@ app.use('/assets', express.static(path.join(process.cwd(), 'dist', 'assets'), {
   }
 }));
 
-// Serve images and media files from the project root
+// Serve images and media files from the project root (excluding index.html)
 app.use(express.static(process.cwd(), {
+  index: false, // Don't serve index.html automatically
   setHeaders: (res, path) => {
     if (path.endsWith('.png')) {
       res.setHeader('Content-Type', 'image/png');
