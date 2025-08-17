@@ -30,7 +30,25 @@ app.use(cors({
 }));
 
 // Serve static files from the dist directory (React build output)
-app.use(express.static(path.join(process.cwd(), 'dist')));
+app.use(express.static(path.join(process.cwd(), 'dist'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.jpeg') || path.endsWith('.gif') || path.endsWith('.webp')) {
+      res.setHeader('Content-Type', 'image/' + path.split('.').pop());
+    }
+  }
+}));
+
+// Debug middleware to log static file requests
+app.use((req, res, next) => {
+  if (req.path.startsWith('/assets/')) {
+    console.log(`📁 Static file request: ${req.path}`);
+  }
+  next();
+});
 
 // Serve index.html for the root route
 app.get('/', (req, res) => {
