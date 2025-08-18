@@ -89,3 +89,4 @@ if (!assetsPath) {
 }
 
 console.log('\n✅ Asset path test completed');
+

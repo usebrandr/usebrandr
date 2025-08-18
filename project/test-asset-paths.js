@@ -88,3 +88,4 @@ for (const request of testRequests) {
 }
 
 console.log('\n✅ Asset path test completed');
+

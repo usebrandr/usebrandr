@@ -61,3 +61,4 @@ console.log(`   Architecture: ${process.arch}`);
 console.log(`   Node version: ${process.version}`);
 
 console.log('\n✅ Debug script completed');
+
