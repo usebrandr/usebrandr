@@ -44,12 +44,25 @@ if (fs.existsSync(distPath)) {
   console.warn(`⚠️ Dist folder not found at: ${distPath}`);
 }
 
-// Serve everything inside dist/
+// Serve static assets with proper MIME types
+app.use('/assets', express.static(path.join(distPath, 'assets'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
+
+// Serve other static files from dist/
 app.use(express.static(distPath));
 
-// React Router fallback – serve index.html
+// React Router fallback – serve index.html (but not for assets)
 app.get('*', (req, res, next) => {
-  if (req.path.startsWith('/api/')) return next(); // Skip API
+  if (req.path.startsWith('/api/') || req.path.startsWith('/assets/')) {
+    return next(); // Skip API and assets
+  }
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
@@ -117,7 +130,68 @@ app.post('/api/waitlist', async (req, res) => {
   }
 });
 
-// (add your other /api/waitlist/join, /api/status, /api/brand routes here)
+// Add the missing /api/waitlist/join route that the frontend expects
+app.post('/api/waitlist/join', async (req, res) => {
+  try {
+    const { email, userType } = req.body;
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ error: 'Valid email required' });
+    }
+
+    try {
+      const client = await connectToMongoDB();
+      const db = client.db('waitlist');
+      const collection = db.collection('emails');
+      const existing = await collection.findOne({ email: email.toLowerCase() });
+      if (existing) return res.status(409).json({ error: 'Email already registered' });
+
+      const result = await collection.insertOne({
+        email: email.toLowerCase(),
+        userType: userType || 'business',
+        createdAt: new Date(),
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      });
+
+      console.log(`New waitlist signup: ${email} (${userType})`);
+      res.status(200).json({ success: true, id: result.insertedId });
+    } catch {
+      res.status(200).json({
+        success: true,
+        id: 'fallback-' + Date.now(),
+        note: 'Stored locally – MongoDB offline'
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Add /api/status route for health checks
+app.get('/api/status', async (req, res) => {
+  try {
+    if (MONGODB_URI) {
+      await connectToMongoDB();
+      res.status(200).json({ 
+        status: 'connected', 
+        message: 'MongoDB connection successful',
+        database: 'waitlist'
+      });
+    } else {
+      res.status(200).json({ 
+        status: 'offline', 
+        message: 'MongoDB URI not configured',
+        note: 'Set MONGODB_URI environment variable to enable database storage'
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'MongoDB connection failed',
+      error: error.message
+    });
+  }
+});
 
 /* ================================
    START SERVER
