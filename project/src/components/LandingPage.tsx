@@ -283,12 +283,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 sm:mb-4 lg:mb-6 text-center">Product Demo</h3>
               <div className="relative group border-2 border-white/20 rounded-2xl sm:rounded-3xl p-1 sm:p-2">
                 <video 
-                  className="w-full h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px] object-cover rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl"
+                  className="w-full h-[250px] sm:h-[300px] md:h-[400px] lg:h-[400px] object-cover rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl cursor-pointer"
                   poster="/video-thumbnail.jpg"
+                  id="demo-video"
                   onClick={(e) => {
+                    e.preventDefault();
                     const video = e.currentTarget as HTMLVideoElement;
                     if (video.paused) {
-                      video.play();
+                      video.play().catch(err => console.log('Play error:', err));
                     } else {
                       video.pause();
                     }
@@ -302,11 +304,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <button 
                 className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300 rounded-xl sm:rounded-2xl group-hover:opacity-100 opacity-0"
                 onClick={(e) => {
-                  const video = e.currentTarget.previousElementSibling as HTMLVideoElement;
-                  if (video.paused) {
-                    video.play();
-                  } else {
+                  e.preventDefault();
+                  const video = document.getElementById('demo-video') as HTMLVideoElement;
+                  if (video && !video.paused) {
                     video.pause();
+                  } else if (video && video.paused) {
+                    video.play().catch(err => console.log('Play error:', err));
                   }
                 }}
               >
