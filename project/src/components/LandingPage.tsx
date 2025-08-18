@@ -288,11 +288,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                   id="demo-video"
                   onClick={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     const video = e.currentTarget as HTMLVideoElement;
-                    if (video.paused) {
-                      video.play().catch(err => console.log('Play error:', err));
-                    } else {
+                    
+                    // Use the same logic as the button to prevent conflicts
+                    if (video.dataset.playing === 'true') {
                       video.pause();
+                      video.dataset.playing = 'false';
+                    } else {
+                      video.play().then(() => {
+                        video.dataset.playing = 'true';
+                      }).catch(err => {
+                        console.log('Play error:', err);
+                        video.dataset.playing = 'false';
+                      });
                     }
                   }}
                 >
@@ -305,11 +314,21 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-all duration-300 rounded-xl sm:rounded-2xl group-hover:opacity-100 opacity-0"
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   const video = document.getElementById('demo-video') as HTMLVideoElement;
-                  if (video && !video.paused) {
+                  if (!video) return;
+                  
+                  // Prevent rapid clicking
+                  if (video.dataset.playing === 'true') {
                     video.pause();
-                  } else if (video && video.paused) {
-                    video.play().catch(err => console.log('Play error:', err));
+                    video.dataset.playing = 'false';
+                  } else {
+                    video.play().then(() => {
+                      video.dataset.playing = 'true';
+                    }).catch(err => {
+                      console.log('Play error:', err);
+                      video.dataset.playing = 'false';
+                    });
                   }
                 }}
               >
